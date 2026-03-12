@@ -882,7 +882,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Name Of Object
+  m_text: Bonito Flakes
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1716,7 +1716,7 @@ MonoBehaviour:
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
-    m_NormalColor: {r: 0.7264151, g: 0.56537026, b: 0.56537026, a: 1}
+    m_NormalColor: {r: 0.46933755, g: 0.5943396, b: 0.42893377, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
@@ -1800,6 +1800,7 @@ GameObject:
   - component: {fileID: 1559512151}
   - component: {fileID: 1559512150}
   - component: {fileID: 1559512149}
+  - component: {fileID: 1559512152}
   m_Layer: 5
   m_Name: Image
   m_TagString: Untagged
@@ -1864,6 +1865,21 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1559512152
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1559512148}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5dfe5626a19aa4655be6de0352408639, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Emma_pop
+  sizeX: 0
+  sizeY: 0
+  sizeZ: 0
 --- !u!1 &1607841279
 GameObject:
   m_ObjectHideFlags: 0
@@ -1924,7 +1940,7 @@ MonoBehaviour:
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
-    m_NormalColor: {r: 0.7264151, g: 0.56537026, b: 0.56537026, a: 1}
+    m_NormalColor: {r: 0.46933755, g: 0.5943396, b: 0.42893377, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
