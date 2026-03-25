@@ -1,14 +1,10 @@
 fileFormatVersion: 2
-<<<<<<< HEAD
-guid: 6039b748ac1094d559fa4abd536b0fb6
-=======
-guid: 151ce12e06628bf4fb816dcd477e0472
->>>>>>> main
+guid: ac590e7532f4f408d94cf535ae6bd7ce
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -6986892626816504426
-    second: 462577975_3950152451882055_4512082779064254750_n_0
+      213: -4106654815882757875
+    second: 44122854-portrait-of-a-happy-guy-with-thumbs-up-hand-sign_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,30 +96,17 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 4
-    buildTarget: WebGL
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-    ignorePlatformSupport: 0
-    androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: 462577975_3950152451882055_4512082779064254750_n_0
+      name: 44122854-portrait-of-a-happy-guy-with-thumbs-up-hand-sign_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 544
-        height: 609
+        width: 1300
+        height: 1088
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -132,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 69d6ece8c22990f90800000000000000
-      internalID: -6986892626816504426
+      spriteID: d093924f33b3207c0800000000000000
+      internalID: -4106654815882757875
       vertices: []
       indices: 
       edges: []
@@ -152,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      462577975_3950152451882055_4512082779064254750_n_0: -6986892626816504426
+      44122854-portrait-of-a-happy-guy-with-thumbs-up-hand-sign_0: -4106654815882757875
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
