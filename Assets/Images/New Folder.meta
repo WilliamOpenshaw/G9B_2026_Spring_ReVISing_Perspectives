@@ -1,9 +1,13 @@
 fileFormatVersion: 2
+<<<<<<< HEAD:Assets/_Recovery.meta
 <<<<<<< HEAD
 guid: 03424012c67304f0abcb3f031f3669a8
 =======
 guid: d5199eccd7cd103428b9efd5471d81e5
 >>>>>>> main
+=======
+guid: 872e896c705ff6c4195973e0ebdcc6e1
+>>>>>>> main:Assets/Images/New Folder.meta
 folderAsset: yes
 DefaultImporter:
   externalObjects: {}
