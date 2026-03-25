@@ -1,0 +1,53 @@
+# SyncStudentBranches.ps1
+$logFile = "GitSyncLog.txt"
+$timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
+"--- SYNC SESSION START: $timestamp ---" | Out-File $logFile -Append
+
+Write-Host "--- STARTING GLOBAL CLASSROOM CLEANUP (LOGGING ENABLED) ---" -ForegroundColor Cyan
+
+git fetch --all
+$branches = git branch -r | Where-Object { $_ -notmatch "main" -and $_ -notmatch "->" }
+$totalBranches = 0
+$successCount = 0
+
+foreach ($rawBranch in $branches) {
+    $name = $rawBranch.Trim().Replace("origin/", "")
+    $totalBranches++
+    
+    $header = "`n[$(Get-Date -Format 'HH:mm:ss')] PROCESSING: $name"
+    Write-Host $header -ForegroundColor Yellow
+    $header | Out-File $logFile -Append
+    
+    # Switch and Sync
+    git checkout $name
+    git reset --hard origin/$name
+    
+    # Remove tracked junk (DS_Store and _Recovery)
+    # These files are often excessive in size or contain sensitive data 
+    "Cleaning .DS_Store and _Recovery files..." | Out-File $logFile -Append
+    git rm -r --cached .DS_Store, **/.DS_Store, Assets/_Recovery, Assets/_Recovery.meta --ignore-unmatch | Out-File $logFile -Append
+    
+    # Execute Merge: Main -> Student Branch
+    # Direction: Applying official updates to student work without overwriting their additions
+    $mergeOutput = git merge main -Xours -m "Admin: Automatic sync with main and junk file cleanup"
+    $mergeOutput | Out-File $logFile -Append
+    Write-Output $mergeOutput
+    
+    # Push and record result
+    if ($LASTEXITCODE -eq 0) {
+        git push origin $name 2>&1 | Out-File $logFile -Append
+        "SUCCESS: $name updated and pushed." | Out-File $logFile -Append
+        $successCount++
+    } else {
+        "ERROR: Failed to process $name." | Out-File $logFile -Append
+    }
+}
+
+# Wrap up
+git checkout main
+$summary = "`n--- FINAL SUMMARY ---`nTotal: $totalBranches | Success: $successCount"
+Write-Host $summary -ForegroundColor Green
+$summary | Out-File $logFile -Append
+"--- SESSION END ---`n" | Out-File $logFile -Append
+
+Read-Host -Prompt "Log saved to $logFile. Press Enter to close"
