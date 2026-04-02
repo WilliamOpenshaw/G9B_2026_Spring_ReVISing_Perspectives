@@ -1,5 +1,19 @@
 # This .gitignore file should be placed at the root of your Unity project directory
 #
+#--- NEW ADDITIONS FOR YOUR PROJECT ---
+# macOS system files
+.DS_Store
+**/.DS_Store
+
+# Unity Recovery files (Auto-saves from crashes)
+Assets/_Recovery/
+Assets/_Recovery.meta
+
+# Personal User Data (Window layouts, etc.)
+/[Uu]ser[Ss]ettings/
+/[Vv]isual[Ss]tudio/
+.vsconfig
+
 # Get latest from https://github.com/github/gitignore/blob/main/Unity.gitignore
 #
 .utmp/
