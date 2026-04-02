@@ -4,7 +4,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;// Required when using Event data.
 using System.Collections.Generic;
 
-public class Aden_pop : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+public class Zoe_pop_2 : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     public float sizeX;
     public float sizeY;
@@ -39,4 +39,5 @@ public class Aden_pop : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         //cube1.transform.localScale = new Vector3(sizeX * 1.5f, sizeY * 1.5f, sizeZ * 1.5f);
     }
 }
+
 
