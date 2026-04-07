@@ -1,5 +1,9 @@
 fileFormatVersion: 2
-guid: abd9114dd56d94fcb9cb9284b5bf550e
+<<<<<<< HEAD
+guid: e9ee8cc0b29db40429acc8801869e56c
+=======
+guid: e8414b90a9be6fe4e890517e5cebef8d
+>>>>>>> parent of 8988cd1 (Revert "user choice")
 TextureImporter:
   internalIDToNameTable:
   - first:
