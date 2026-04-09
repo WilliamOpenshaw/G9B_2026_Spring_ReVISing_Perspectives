@@ -1,14 +1,10 @@
 fileFormatVersion: 2
-<<<<<<< HEAD
-guid: e9ee8cc0b29db40429acc8801869e56c
-=======
-guid: e8414b90a9be6fe4e890517e5cebef8d
->>>>>>> parent of 8988cd1 (Revert "user choice")
+guid: 1c6687b44cd8f4ebcb288388f2998e56
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -6986892626816504426
-    second: 462577975_3950152451882055_4512082779064254750_n_0
+      213: 8795739510777313884
+    second: flower photo_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -117,13 +113,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: 462577975_3950152451882055_4512082779064254750_n_0
+      name: flower photo_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 544
-        height: 609
+        width: 2046
+        height: 1520
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -132,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 69d6ece8c22990f90800000000000000
-      internalID: -6986892626816504426
+      spriteID: c5affb4bb7eb01a70800000000000000
+      internalID: 8795739510777313884
       vertices: []
       indices: 
       edges: []
@@ -152,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      462577975_3950152451882055_4512082779064254750_n_0: -6986892626816504426
+      flower photo_0: 8795739510777313884
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
