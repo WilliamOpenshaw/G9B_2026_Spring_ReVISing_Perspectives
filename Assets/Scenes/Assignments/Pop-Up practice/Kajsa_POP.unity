@@ -2557,8 +2557,9 @@ GameObject:
   - component: {fileID: 2004787830}
   - component: {fileID: 2004787829}
   - component: {fileID: 2004787828}
+  - component: {fileID: 2004787831}
   m_Layer: 5
-  m_Name: Image
+  m_Name: flower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2621,6 +2622,21 @@ RectTransform:
   m_AnchoredPosition: {x: -8, y: -40}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &2004787831
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2004787827}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56ff81a67b57841a192ea99509d14545, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Kajsa_pop
+  sizeX: 0
+  sizeY: 0
+  sizeZ: 0
 --- !u!1 &2075595842
 GameObject:
   m_ObjectHideFlags: 0
