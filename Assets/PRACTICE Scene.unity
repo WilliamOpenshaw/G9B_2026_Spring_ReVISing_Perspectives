@@ -3755,8 +3755,8 @@ Transform:
   m_GameObject: {fileID: 1178325194}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 124.98, y: -258.51, z: 0}
-  m_LocalScale: {x: 23.100527, y: 23.100527, z: 23.100527}
+  m_LocalPosition: {x: 97.9436, y: -289.2123, z: 0}
+  m_LocalScale: {x: 9.315699, y: 18.268015, z: 23.100527}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1038140450}
@@ -3808,7 +3808,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 6
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: 96e3e14f1b0a99a45a5fbdfe3748a418, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -4614,13 +4614,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1408764699}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -151.1, y: -267.5, z: 0}
-  m_LocalScale: {x: 10.649575, y: 10.649575, z: 10.649575}
+  m_LocalRotation: {x: 0.9996914, y: -0.017196458, z: 0.006530191, w: -0.016693642}
+  m_LocalPosition: {x: 113, y: -271.1, z: -0.7}
+  m_LocalScale: {x: -10.814643, y: 10.833813, z: 10.649575}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1038140450}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 181.9, y: -0.78100586, z: 1.9839935}
 --- !u!212 &1408764701
 SpriteRenderer:
   serializedVersion: 2
@@ -4668,7 +4668,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 10
+  m_SortingOrder: 4
   m_MaskInteraction: 0
   m_Sprite: {fileID: -5362292703166988329, guid: ea41d827eabb09b45bc4a95ce0ad8664, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -4926,7 +4926,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Student name
+  m_text: Kajsa
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -4953,7 +4953,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 183.2
+  m_fontSize: 196.45
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
