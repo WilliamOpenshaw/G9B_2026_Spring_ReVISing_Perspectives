@@ -289,7 +289,7 @@ RectTransform:
   - {fileID: 416941549}
   - {fileID: 595200007}
   m_Father: {fileID: 1571631227}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 41.539}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -33.636}
   m_AnchorMin: {x: 0.083000004, y: 0.12011111}
   m_AnchorMax: {x: 0.91852087, y: 0.8861852}
   m_AnchoredPosition: {x: 0, y: 0}
@@ -660,7 +660,7 @@ RectTransform:
   m_Children:
   - {fileID: 608819083}
   m_Father: {fileID: 878720646}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 9.01133}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.07289627, y: 0.05153936}
   m_AnchorMax: {x: 0.47438976, y: 0.33041734}
   m_AnchoredPosition: {x: 0, y: 0}
@@ -876,7 +876,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 66594129}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 54.086}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -14.915}
   m_AnchorMin: {x: 0.059753276, y: 0.10341733}
   m_AnchorMax: {x: 0.9341169, y: 0.6974174}
   m_AnchoredPosition: {x: 0, y: 0}
@@ -1253,7 +1253,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 878720646}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -7.23634}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.06540283, y: 0.54116535}
   m_AnchorMax: {x: 0.957, y: 0.9274174}
   m_AnchoredPosition: {x: 0, y: 0}
@@ -1392,7 +1392,7 @@ RectTransform:
   m_Children:
   - {fileID: 817743564}
   m_Father: {fileID: 66594129}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -59.503}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 13.497}
   m_AnchorMin: {x: 0.64812994, y: 0.74700004}
   m_AnchorMax: {x: 0.9341169, y: 0.93816537}
   m_AnchoredPosition: {x: 0, y: 0}
@@ -2725,7 +2725,7 @@ RectTransform:
   m_Children:
   - {fileID: 778316274}
   m_Father: {fileID: 878720646}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -10.985419}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.52500004, y: 0.068417326}
   m_AnchorMax: {x: 0.93285716, y: 0.33041734}
   m_AnchoredPosition: {x: 0, y: 0}
