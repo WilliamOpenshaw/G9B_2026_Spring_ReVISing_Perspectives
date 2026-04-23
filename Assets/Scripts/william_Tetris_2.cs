@@ -2,7 +2,7 @@ using System;
 using TMPro;
 using UnityEngine;
 
-public class william_Tetris : MonoBehaviour
+public class william_Tretris_2 : MonoBehaviour
 {
     public GameObject square0;
     public GameObject long0;
