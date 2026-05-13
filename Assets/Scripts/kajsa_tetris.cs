@@ -2,7 +2,7 @@ using System;
 using TMPro;
 using UnityEngine;
 
-public class Tetris kajsa_tetris.c : MonoBehaviour
+public class kajsa_tetris : MonoBehaviour
 {
     public GameObject square0;
     public GameObject long0;
