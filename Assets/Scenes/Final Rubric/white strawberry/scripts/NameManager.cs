@@ -36,7 +36,7 @@ public class NameManager : MonoBehaviour
         }
         
         //1. put the new text up so like text2.text = "abc " + playerName + " def" REMEMBER TO ADDTHE ; !! 
-        text1.text = "Hello " + playerName + ", you must be the new worker! Welcome welcome. I will be your broker. Put your stuff down and get to work.";
+        text1.text = "Hello " + playerName + ", you must be the new worker! Welcome welcome. I am your broker.";
         
         // example: text2.text = "abc " + playerName + " def";
         
