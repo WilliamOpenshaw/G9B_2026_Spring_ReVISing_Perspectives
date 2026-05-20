@@ -9,7 +9,8 @@ public class CookingGame : MonoBehaviour
     public GameObject winPanel; // Drag your WinPanel here
     public GameObject ingredientPanel;     
     public GameObject stovePanel;          
-    public GameObject popupPanel;          
+    public GameObject popupPanel;    
+
 
     [Header("Recipe Settings")]
     public List<string> recipeOrder = new List<string> { "Onion", "Oil", "Rice" };
@@ -20,7 +21,8 @@ public class CookingGame : MonoBehaviour
     public TextMeshProUGUI recipeListText;
     public TextMeshProUGUI popupText;      
     public TextMeshProUGUI timerText;      
-    public Slider cookingSlider;           
+    public Slider cookingSlider;
+    public GameObject continueButton;           
 
     [Header("Global Timer Settings")]
     public float totalGameTime = 40f;      
@@ -193,20 +195,27 @@ public class CookingGame : MonoBehaviour
     {
     isGameActive = false;
     isCookingPhaseActive = false;
+    
     ingredientPanel.SetActive(false);
     stovePanel.SetActive(false);
 
     if (success) 
     {
-        // Turn on our awesome new win screen!
         winPanel.SetActive(true);
         popupPanel.SetActive(false); 
+        continueButton.SetActive(false); // Hide it on win screen
+        Debug.Log("Game ended: PLAYER WON!");
     }
     else
     {
-        // Still show the normal game over popup if they run out of time
         popupPanel.SetActive(true);
+        winPanel.SetActive(false);
+        
+        // Force the Continue button to show up so they can click it!
+        continueButton.SetActive(true); 
+        
         popupText.text = "<b>GAME OVER!</b>\nYou ran out of time. The family is angry.";
+        Debug.Log("Game ended: PLAYER LOST!");
     }
     }
 }
