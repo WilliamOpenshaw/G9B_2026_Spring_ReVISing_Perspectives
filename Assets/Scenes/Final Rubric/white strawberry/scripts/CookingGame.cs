@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class CookingGame : MonoBehaviour
 {
     [Header("Game Panels")]
+    public GameObject winPanel; // Drag your WinPanel here
     public GameObject ingredientPanel;     
     public GameObject stovePanel;          
     public GameObject popupPanel;          
@@ -187,15 +188,25 @@ public class CookingGame : MonoBehaviour
     }
     #endregion
 
+
     void GameOver(bool success)
     {
-        isGameActive = false;
-        isCookingPhaseActive = false;
-        ingredientPanel.SetActive(false);
-        stovePanel.SetActive(false);
-        popupPanel.SetActive(true);
+    isGameActive = false;
+    isCookingPhaseActive = false;
+    ingredientPanel.SetActive(false);
+    stovePanel.SetActive(false);
 
-        if (success) popupText.text = "<b>SUCCESS!</b>\nYou managed to cook all 3 meals before your shift ended!";
-        else popupText.text = "<b>GAME OVER!</b>\nYou ran out of time. The family is angry.";
+    if (success) 
+    {
+        // Turn on our awesome new win screen!
+        winPanel.SetActive(true);
+        popupPanel.SetActive(false); 
+    }
+    else
+    {
+        // Still show the normal game over popup if they run out of time
+        popupPanel.SetActive(true);
+        popupText.text = "<b>GAME OVER!</b>\nYou ran out of time. The family is angry.";
+    }
     }
 }
