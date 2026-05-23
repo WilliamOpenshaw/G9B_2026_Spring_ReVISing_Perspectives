@@ -24,13 +24,11 @@ public class MazePlayerController : MonoBehaviour
     void Start()
     {
         gameManager = Object.FindFirstObjectByType<LaundryBabyManager>();
-        ResetToStart();
+        // Don't call ResetToStart() here - startPosition won't be set until LaundryBabyManager configures it
     }
 
     void Update()
     {
-        if (gameManager != null && !gameManager.isGameActive) return;
-
         HandleMovementWithWalls();
         CheckTeleportTraps();
         CheckExitCollision();
@@ -45,35 +43,34 @@ public class MazePlayerController : MonoBehaviour
 
         Vector2 movement = new Vector2(moveX, moveY).normalized * moveSpeed * Time.deltaTime;
         
-        // 1. Test Horizontal Step safely using absolute world space
-        Vector3 originalWorldPos = rectTransform.position;
-        rectTransform.anchoredPosition += new Vector2(movement.x, 0);
-        
-        if (WillCollideWithWalls(rectTransform))
-        {
-            rectTransform.position = originalWorldPos; // Revert if X hits a wall
-        }
+        Vector2 originalPos = rectTransform.anchoredPosition;
+        rectTransform.anchoredPosition += movement;
 
-        // 2. Test Vertical Step safely using absolute world space
-        originalWorldPos = rectTransform.position;
-        rectTransform.anchoredPosition += new Vector2(0, movement.y);
-        
-        if (WillCollideWithWalls(rectTransform))
+        if (WillCollideWithWalls())
         {
-            rectTransform.position = originalWorldPos; // Revert if Y hits a wall
+            rectTransform.anchoredPosition = originalPos; 
         }
     }
 
-    bool WillCollideWithWalls(RectTransform playerRect)
+    bool WillCollideWithWalls()
     {
         if (solidWalls == null || solidWalls.Count == 0) return false;
+
+        Vector3[] playerCorners = new Vector3[4];
+        rectTransform.GetWorldCorners(playerCorners);
 
         foreach (RectTransform wall in solidWalls)
         {
             if (wall == null) continue;
-            if (IsOverlappingInWorldSpace(playerRect, wall))
+
+            foreach (Vector3 corner in playerCorners)
             {
-                return true; 
+                Vector2 screenPoint = RectTransformUtility.WorldToScreenPoint(null, corner);
+                
+                if (RectTransformUtility.RectangleContainsScreenPoint(wall, screenPoint, null))
+                {
+                    return true; 
+                }
             }
         }
         return false; 
@@ -83,14 +80,21 @@ public class MazePlayerController : MonoBehaviour
     {
         if (teleportTraps == null || teleportTraps.Count == 0) return;
 
+        Vector3[] playerCorners = new Vector3[4];
+        rectTransform.GetWorldCorners(playerCorners);
+
         foreach (RectTransform trap in teleportTraps)
         {
             if (trap == null) continue;
 
-            if (IsOverlappingInWorldSpace(rectTransform, trap))
+            foreach (Vector3 corner in playerCorners)
             {
-                ResetToStart();
-                break;
+                Vector2 screenPoint = RectTransformUtility.WorldToScreenPoint(null, corner);
+                if (RectTransformUtility.RectangleContainsScreenPoint(trap, screenPoint, null))
+                {
+                    ResetToStart();
+                    return;
+                }
             }
         }
     }
@@ -99,30 +103,22 @@ public class MazePlayerController : MonoBehaviour
     {
         if (exitZone == null) return;
 
-        if (IsOverlappingInWorldSpace(rectTransform, exitZone))
+        Vector3[] playerCorners = new Vector3[4];
+        rectTransform.GetWorldCorners(playerCorners);
+
+        foreach (Vector3 corner in playerCorners)
         {
-            if (gameManager != null)
+            Vector2 screenPoint = RectTransformUtility.WorldToScreenPoint(null, corner);
+            if (RectTransformUtility.RectangleContainsScreenPoint(exitZone, screenPoint, null))
             {
-                if (isGoingToNursery) gameManager.CompleteMazeToNursery();
-                else gameManager.CompleteMazeToLaundry();
+                if (gameManager != null)
+                {
+                    if (isGoingToNursery) gameManager.GoToNurseryRoom();
+                    else gameManager.GoToLaundryRoom();
+                }
+                return;
             }
         }
-    }
-
-    // NEW WORLD-SPACE COLLISION MATH: Uses screen space boundaries instead of local anchor points
-    bool IsOverlappingInWorldSpace(RectTransform rectA, RectTransform rectB)
-    {
-        Vector3[] cornersA = new Vector3[4];
-        Vector3[] cornersB = new Vector3[4];
-        
-        rectA.GetWorldCorners(cornersA);
-        rectB.GetWorldCorners(cornersB);
-
-        // corners: 0 = bottom-left, 1 = top-left, 2 = top-right, 3 = bottom-right
-        bool xOverlap = (cornersA[0].x < cornersB[2].x) && (cornersA[2].x > cornersB[0].x);
-        bool yOverlap = (cornersA[0].y < cornersB[2].y) && (cornersA[2].y > cornersB[0].y);
-
-        return xOverlap && yOverlap;
     }
 
     public void ResetToStart()
@@ -133,5 +129,18 @@ public class MazePlayerController : MonoBehaviour
         {
             rectTransform.position = startPosition.position;
         }
+    }
+
+    // Call this to turn on the maze and reset the player position
+    public void StartMazeGame()
+    {
+        gameObject.SetActive(true);
+        ResetToStart(); // Make sure this function teleports rectTransform to startPosition!
+    }
+
+    // Call this to completely hide the maze layout
+    public void HideMazeGame()
+    {
+        gameObject.SetActive(false); // Disappears the maze entirely
     }
 }

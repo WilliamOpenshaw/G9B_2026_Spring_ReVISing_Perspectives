@@ -1,87 +1,190 @@
 using UnityEngine;
-using TMPro;
 
 public class LaundryBabyManager : MonoBehaviour
 {
-    [Header("Game State")]
-    public float matchTimer = 90f;
-    public bool isGameActive = true;
-
-    [Header("Room Panels")]
+    [Header("The 4 Main Room Panels")]    
     public GameObject laundryPanel;
     public GameObject livingRoomPanel;     // Maze 1: Laundry -> Nursery
     public GameObject livingRoomBackPanel; // Maze 2: Nursery -> Laundry
     public GameObject nurseryPanel;
 
-    [Header("Laundry Tracker")]
-    public int totalClothesToWash = 50;
-    private int clothesRemaining;
-    public LaundrySortingGame laundrySortingScript; // Reference to the sorting game
+    [Header("Alert Cue (Laundry Room)")]
+    public GameObject babyCryCueUI; 
+    public float responseTimeLimit = 15f; 
+    private float responseTimer;
+    private bool isCueActive = false;
+
+    [Header("Random Cry Event Settings")]
+    public float minTimeBetweenCries = 10f; 
+    public float maxTimeBetweenCries = 25f; 
+    private float cryEventTimer;
+
+    [Header("Script References")]
+    public BabyBalanceGame balanceGameScript; 
+    public MazePlayerController mazeScript; 
+
+    [Header("Maze 1 Configuration")]
+    public RectTransform maze1Start;
+    public RectTransform maze1Exit;
+
+    [Header("Maze 2 Configuration")]
+    public RectTransform maze2Start;
+    public RectTransform maze2Exit;
+
+    // Game State Flags
+    public bool isBabyCrying = false;
+    public bool isGameActive = true; 
+    private bool isGameOver = false;
 
     void Start()
     {
-        clothesRemaining = totalClothesToWash;
-        SwitchRoom("Laundry");
+        GoToLaundryRoom();
+        ResetCryTimer();
     }
 
     void Update()
     {
-        if (!isGameActive) return;
-        HandleMatchTimer();
-    }
+        if (isGameOver) return;
 
-    void HandleMatchTimer()
-    {
-        matchTimer -= Time.deltaTime;
-        if (matchTimer <= 0)
+        if (!isBabyCrying)
         {
-            matchTimer = 0;
-            LoseGame("Time ran out!");
+            cryEventTimer -= Time.deltaTime;
+            if (cryEventTimer <= 0)
+            {
+                TriggerCryAlert();
+            }
+        }
+
+        if (isCueActive && !nurseryPanel.activeSelf)
+        {
+            responseTimer -= Time.deltaTime;
+            if (responseTimer <= 0)
+            {
+                TriggerBabyCryGameOver(); 
+            }
         }
     }
 
-    public void SwitchRoom(string roomName)
+    void TriggerCryAlert()
     {
-        // 1. FORCE RESET BOTH PLAYERS INSTANTLY BEFORE TURNING PANELS ON/OFF
-        ResetAllMazePlayers();
+        isBabyCrying = true;
+        isCueActive = true;
+        babyCryCueUI.SetActive(true);
+        responseTimer = responseTimeLimit;
+        Debug.Log("THE BABY IS CRYING!");
+    }
 
-        // 2. Turn off all panels to prevent overlaps
-        laundryPanel.SetActive(false);
+    // ==========================================
+    // ROOM NAVIGATION
+    // ==========================================
+
+    public void GoToLaundryRoom()
+    {
+        laundryPanel.SetActive(true);
         livingRoomPanel.SetActive(false);
         livingRoomBackPanel.SetActive(false);
         nurseryPanel.SetActive(false);
+        
+        if (balanceGameScript != null) balanceGameScript.ShowEmptyRoom();
+        babyCryCueUI.SetActive(isCueActive); 
 
-        // 3. Turn on the correct room
-        if (roomName == "Laundry") laundryPanel.SetActive(true);
-        if (roomName == "Nursery") nurseryPanel.SetActive(true);
-        if (roomName == "LivingRoom") livingRoomPanel.SetActive(true);
-        if (roomName == "LivingRoomBack") livingRoomBackPanel.SetActive(true);
+        if (mazeScript != null) mazeScript.gameObject.SetActive(false);
     }
 
-    // THE DEFINITION: This searches your panels and forces both players back to their start points
-    private void ResetAllMazePlayers()
+    // Entering Maze 1 (Laundry -> Nursery)
+    public void GoToLivingRoomForward()
     {
-        // Find the player in Maze 1 (Forward) and reset them
-        if (livingRoomPanel != null && livingRoomPanel.activeInHierarchy)
-        {
-            MazePlayerController player1 = livingRoomPanel.GetComponentInChildren<MazePlayerController>();
-            if (player1 != null) player1.ResetToStart();
-        }
+        laundryPanel.SetActive(false);
+        livingRoomPanel.SetActive(true);
+        livingRoomBackPanel.SetActive(false);
+        nurseryPanel.SetActive(false);
 
-        // Find the player in Maze 2 (Backward) and reset them if the panel is active
-        if (livingRoomBackPanel != null && livingRoomBackPanel.activeInHierarchy)
+        if (balanceGameScript != null) balanceGameScript.ShowEmptyRoom();
+        babyCryCueUI.SetActive(false); 
+
+        if (mazeScript != null) 
         {
-            MazePlayerController player2 = livingRoomBackPanel.GetComponentInChildren<MazePlayerController>();
-            if (player2 != null) player2.ResetToStart();
+            // Update variables safely without touching the parent hierarchy
+            mazeScript.startPosition = maze1Start;
+            mazeScript.exitZone = maze1Exit;
+            mazeScript.isGoingToNursery = true;
+
+            mazeScript.StartMazeGame(); 
         }
     }
 
-    public void CompleteMazeToNursery() { SwitchRoom("Nursery"); }
-    public void CompleteMazeToLaundry() { SwitchRoom("Laundry"); }
-
-    public void LoseGame(string reason)
+    // Entering Maze 2 (Nursery -> Laundry)
+    public void GoToLivingRoomBackward()
     {
-        isGameActive = false;
-        Debug.Log($"GAME OVER: {reason}");
+        laundryPanel.SetActive(false);
+        livingRoomPanel.SetActive(false);
+        livingRoomBackPanel.SetActive(true);
+        nurseryPanel.SetActive(false);
+
+        if (balanceGameScript != null) balanceGameScript.ShowEmptyRoom();
+        babyCryCueUI.SetActive(false); 
+
+        if (mazeScript != null) 
+        {
+            // Update variables safely without touching the parent hierarchy
+            mazeScript.startPosition = maze2Start;
+            mazeScript.exitZone = maze2Exit;
+            mazeScript.isGoingToNursery = false;
+
+            mazeScript.StartMazeGame(); 
+        }
     }
+
+    public void GoToLivingRoomMaze() { GoToLivingRoomForward(); }
+
+    public void GoToNurseryRoom()
+    {
+        laundryPanel.SetActive(false);
+        livingRoomPanel.SetActive(false);
+        livingRoomBackPanel.SetActive(false);
+        nurseryPanel.SetActive(true);
+
+        isCueActive = false;
+        babyCryCueUI.SetActive(false);
+
+        if (mazeScript != null) mazeScript.gameObject.SetActive(false);
+
+        if (isBabyCrying)
+        {
+            if (balanceGameScript != null) balanceGameScript.StartTamingGame();
+        }
+        else
+        {
+            if (balanceGameScript != null) balanceGameScript.ShowEmptyRoom();
+        }
+    }
+
+    // ==========================================
+    // GAME LOGIC
+    // ==========================================
+
+    public void CompleteBabyTameSuccess()
+    {
+        isBabyCrying = false; 
+        if (balanceGameScript != null) balanceGameScript.ShowEmptyRoom();
+
+        GoToLivingRoomBackward(); 
+        ResetCryTimer();
+    }
+
+    public void TriggerBabyCryGameOver()
+    {
+        if (isGameOver) return;
+        isGameOver = true;
+        Debug.LogError("GAME OVER!");
+        Time.timeScale = 0f; 
+    }
+
+    void ResetCryTimer()
+    {
+        cryEventTimer = Random.Range(minTimeBetweenCries, maxTimeBetweenCries);
+    }
+
+    public void CompleteMazeToNursery() { GoToNurseryRoom(); }
+    public void CompleteMazeToLaundry() { GoToLaundryRoom(); }
 }
