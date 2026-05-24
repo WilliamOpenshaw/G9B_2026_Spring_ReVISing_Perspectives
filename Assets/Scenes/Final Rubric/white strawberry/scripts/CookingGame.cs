@@ -66,7 +66,9 @@ public class CookingGame : MonoBehaviour
     void HandleGlobalTimer()
     {
         currentTimer -= Time.deltaTime;
-        timerText.text = $"Time Left: <color=red>{currentTimer:F1}s</color>";
+        int minutes = Mathf.FloorToInt(currentTimer / 60);
+        int seconds = Mathf.FloorToInt(currentTimer % 60);
+        timerText.text = $"Time Left: <color=red>{minutes}:{seconds:D2}</color>";
 
         if (currentTimer <= 0)
         {
@@ -217,5 +219,30 @@ public class CookingGame : MonoBehaviour
         popupText.text = "<b>GAME OVER!</b>\nYou ran out of time. The family is angry.";
         Debug.Log("Game ended: PLAYER LOST!");
     }
+    }
+    public void ResetMiniGameForNewDay()
+    {
+        // 1. Reset variables and dish counters
+        completedDishes = 0;
+        currentIngredientIndex = 0;
+        isShelfPhaseComplete = false;
+        isGameActive = true;
+        isCookingPhaseActive = false;
+        sliderSpeed = 2f; // Reset speed back to normal!
+
+        // 2. Reset the clock
+        currentTimer = totalGameTime;
+
+        // 3. Reset panel states
+        ingredientPanel.SetActive(true);
+        stovePanel.SetActive(false);
+        popupPanel.SetActive(false);
+        winPanel.SetActive(false);
+        if (continueButton != null) continueButton.SetActive(false);
+
+        // 4. Redraw the UI recipe text back to 0/3 items
+        UpdateRecipeListUI();
+
+        Debug.Log("Cooking Game has been completely reset for the new day!");
     }
 }

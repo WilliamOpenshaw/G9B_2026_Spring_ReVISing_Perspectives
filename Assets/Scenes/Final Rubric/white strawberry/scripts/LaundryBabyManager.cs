@@ -1,4 +1,5 @@
 using UnityEngine;
+using TMPro;
 
 public class LaundryBabyManager : MonoBehaviour
 {
@@ -31,22 +32,56 @@ public class LaundryBabyManager : MonoBehaviour
     public RectTransform maze2Start;
     public RectTransform maze2Exit;
 
+    [Header("Game End Screens")]
+    public GameObject winPanel;
+    public GameObject losePanel;
+    public TextMeshProUGUI gameTimerText;
+
+    [Header("Game Timer Settings")]
+    public float gameTimeLimit = 90f; // 1 min 30 seconds
+    private float gameTimer;
+    private bool playerWon = false;
+
+    [Header("Laundry Counter")]
+    public int laundryItemsNeeded = 50;
+    private int laundryItemsCompleted = 0;
+
     // Game State Flags
     public bool isBabyCrying = false;
-    public bool isGameActive = true; 
+    public bool isGameActive = true;
     private bool isGameOver = false;
 
     void Start()
     {
         GoToLaundryRoom();
         ResetCryTimer();
+        gameTimer = gameTimeLimit; // Start the game timer
     }
 
     void Update()
     {
         if (isGameOver) return;
 
-        if (!isBabyCrying)
+        // Count down game timer
+        gameTimer -= Time.deltaTime;
+        if (gameTimerText != null)
+        {
+            int minutes = Mathf.FloorToInt(gameTimer / 60);
+            int seconds = Mathf.FloorToInt(gameTimer % 60);
+            gameTimerText.text = $"Time Left: <color=red>{minutes}:{seconds:D2}</color>";
+        }
+
+        // Check if time ran out (player loses!)
+        if (gameTimer <= 0)
+        {
+            playerWon = false;
+            
+            TriggerGameEnd();
+            return;
+        }
+
+        // Baby can only cry when player is in the laundry room
+        if (!isBabyCrying && laundryPanel.activeSelf)
         {
             cryEventTimer -= Time.deltaTime;
             if (cryEventTimer <= 0)
@@ -163,21 +198,61 @@ public class LaundryBabyManager : MonoBehaviour
     // GAME LOGIC
     // ==========================================
 
+    public void CompleteLaundryItem()
+    {
+        laundryItemsCompleted++;
+        Debug.Log("Laundry completed: " + laundryItemsCompleted + "/" + laundryItemsNeeded);
+
+        // Check if player won
+        if (laundryItemsCompleted >= laundryItemsNeeded)
+        {
+            winPanel.SetActive(true);
+            playerWon = true;
+            isGameOver = true;
+            TriggerGameEnd();
+        }
+    }
+
     public void CompleteBabyTameSuccess()
     {
         isBabyCrying = false; 
+        isCueActive = false; // Clear the alert cue
+        babyCryCueUI.SetActive(false); // Make sure it's hidden
         if (balanceGameScript != null) balanceGameScript.ShowEmptyRoom();
-
-        GoToLivingRoomBackward(); 
+        // Don't kick them out - let them stay in the nursery and click a button to go to maze
         ResetCryTimer();
     }
 
     public void TriggerBabyCryGameOver()
     {
         if (isGameOver) return;
+        playerWon = false; // Player lost
+        TriggerGameEnd();
+    }
+
+    void TriggerGameEnd()
+    {
         isGameOver = true;
-        Debug.LogError("GAME OVER!");
-        Time.timeScale = 0f; 
+        Time.timeScale = 0f; // Freeze the game
+
+        // Hide all room panels
+        laundryPanel.SetActive(false);
+        livingRoomPanel.SetActive(false);
+        livingRoomBackPanel.SetActive(false);
+        nurseryPanel.SetActive(false);
+        babyCryCueUI.SetActive(false);
+
+        // Show appropriate end screen
+        if (playerWon)
+        {
+            winPanel.SetActive(true);
+            Debug.Log("PLAYER WON!");
+        }
+        else
+        {
+            if (losePanel != null) losePanel.SetActive(true);
+            Debug.LogError("PLAYER LOST!");
+        }
     }
 
     void ResetCryTimer()

@@ -29,9 +29,9 @@ public class healthbar : MonoBehaviour
 
     }
 
-    public void ReduceHealthBy20()
+    public void ReduceHealthBy(int amount)
     {
-        SetHealth((int)slider.value - 20);
+        SetHealth((int)slider.value - amount);
     }
 
     public void ResetHealth()

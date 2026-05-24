@@ -6,7 +6,8 @@ using TMPro;
 public class LaundrySortingGame : MonoBehaviour
 {
     [Header("UI Panels & Text")]
-    public GameObject laundryPanel;       
+    public GameObject laundryPanel;
+    public GameObject winPanel;       
     public Image clothingDisplayItem;    
     public TextMeshProUGUI progressText; 
 
@@ -20,11 +21,11 @@ public class LaundrySortingGame : MonoBehaviour
     private string currentColorType = "White"; 
     private int currentSortedCount = 0;
     private bool isGameActive = false;
-    private LaundryBabyManager gameManager;
+    public LaundryBabyManager gameManager;
 
     void Awake()
     {
-        gameManager = Object.FindFirstObjectByType<LaundryBabyManager>();
+        //gameManager = Object.FindFirstObjectByType<LaundryBabyManager>();
     }
 
     void Start()
@@ -156,5 +157,23 @@ public class LaundrySortingGame : MonoBehaviour
         isGameActive = false;
         laundryPanel.SetActive(false);
         Debug.Log("50 clothes sorted perfectly with zero exploits!");
+        winPanel.SetActive(true);
+
+    }
+
+    // ==========================================
+    // DAY RESET LOGIC: Call this to reset for a new day!
+    // ==========================================
+    public void ResetMiniGameForNewDay()
+    {
+        currentSortedCount = 0; // Wipe out the 50 clothes sorted yesterday
+        isGameActive = false;   // Keep it quiet until the player enters the room
+
+        // Make sure the gameplay screen is ready and win panel is turned off
+        if (laundryPanel != null) laundryPanel.SetActive(false); 
+        if (winPanel != null) winPanel.SetActive(false);
+
+        UpdateScoreUI();
+        Debug.Log("Laundry Sorting Game has been fully reset for the new day!");
     }
 }

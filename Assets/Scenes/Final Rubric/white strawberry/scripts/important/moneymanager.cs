@@ -6,7 +6,7 @@ using TMPro;
 public class moneymanager : MonoBehaviour
 {
     public TMP_Text moneyText;
-    public int startMoney = -1000;
+    public int startMoney = 0;
     public int currentMoney;
 
     int lastMoney;

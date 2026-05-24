@@ -39,17 +39,29 @@ public class BabyBalanceGame : MonoBehaviour
         balanceGamePanel.SetActive(true);
         warningFlashUI.SetActive(false);
         isGameRunning = true; // Now the game officially starts!
+        isGameActive = true; // Actually run the game logic!
         
         // Reset your taming timer and slider variables back to defaults here
-        // (e.g., tamingTimer = 15f; or whatever your default duration is)
+        currentTimer = tamingTimeLimit;
+        balanceSlider.value = 0.5f; // Center the slider
+        outOfZoneTimer = 0f;
+        currentZoneCenter = 0.5f;
+        PickNewZoneTarget();
     }
 
     // 3. Change your ShowEmptyRoom() function to look like this:
     public void ShowEmptyRoom()
     {
-        balanceGamePanel.SetActive(false);
-        warningFlashUI.SetActive(false);
+        if (balanceGamePanel != null)
+        {
+            balanceGamePanel.SetActive(false);
+        }
+        if (warningFlashUI != null)
+        {
+            warningFlashUI.SetActive(false);
+        }
         isGameRunning = false; // Completely stops the game from ticking down!
+        isGameActive = false; // Stop game logic too
     }
 
     // 4. Go to your Update() function in BabyBalanceGame and add this line at the VERY TOP:

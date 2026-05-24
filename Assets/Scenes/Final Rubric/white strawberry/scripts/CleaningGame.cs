@@ -35,9 +35,24 @@ public class CleaningGame : MonoBehaviour
     private Dictionary<GameObject, float> dirtScrubTimers = new Dictionary<GameObject, float>();
     private float scrubRequiredTime = 1.5f; // Player must scrub a spot for 1.5 seconds to clean it
 
+    private List<GameObject> originalDirtSpots;
+    private List<GameObject> originalDustBunnies;
+    private List<GameObject> originalTrashItems;
     void Start()
     {
+        // Keep a backup of what scenes started with
+        originalDirtSpots = new List<GameObject>(dirtSpots);
+        originalTrashItems = new List<GameObject>(trashItems);
+        originalDustBunnies = new List<GameObject>(dustBunnies);
+
+        InitializeCleaningState();
+    }
+
+    void InitializeCleaningState()
+    {
         timeRemaining = 60f;
+        isGameActive = true;
+
         dirtRemaining = dirtSpots.Count;
         trashRemaining = trashItems.Count;
 
@@ -47,6 +62,8 @@ public class CleaningGame : MonoBehaviour
         vacuumPanel.SetActive(false);
         if (winPanel != null) winPanel.SetActive(false);
         if (failPanel != null) failPanel.SetActive(false);
+        
+        dirtScrubTimers.Clear();
     }
 
     void Update()
@@ -70,7 +87,7 @@ public class CleaningGame : MonoBehaviour
         // Formats the timer into a clean 0:00 style
         int minutes = Mathf.FloorToInt(timeRemaining / 60);
         int seconds = Mathf.FloorToInt(timeRemaining % 60);
-        timerText.text = $"Time Left: {minutes}:{seconds:D2}";
+        timerText.text = $"Time Left:   <color=red>{minutes}:{seconds:D2}</color>";
 
         if (timeRemaining <= 0)
         {
@@ -261,4 +278,25 @@ public class CleaningGame : MonoBehaviour
         );
     }
     #endregion
+
+    public void ResetMiniGameForNewDay()
+    {
+        // 1. If objects were destroyed, we need to respawn or re-enable them.
+        // If your game just hides them or if you want to make sure the lists aren't empty:
+        dirtSpots = new List<GameObject>(originalDirtSpots);
+        trashItems = new List<GameObject>(originalTrashItems);
+        dustBunnies = new List<GameObject>(originalDustBunnies);
+
+        // If you physically Destroy() objects on Day 1, we must make sure they are active.
+        // (Note: If you used Destroy(), we would need to Instantiate copies, but if your game 
+        // objects are still in the hierarchy, this loop will reactivate them!)
+        foreach(GameObject dirt in dirtSpots) { if(dirt != null) { dirt.SetActive(true); Image img = dirt.GetComponent<Image>(); if(img != null) { Color c = img.color; c.a = 1f; img.color = c; } } }
+        foreach(GameObject trash in trashItems) { if(trash != null) trash.SetActive(true); }
+        foreach(GameObject dust in dustBunnies) { if(dust != null) dust.SetActive(true); }
+
+        // 2. Re-run your start values
+        InitializeCleaningState();
+
+        Debug.Log("Cleaning Game lists and clocks reset for the new day!");
+    }
 }

@@ -13,12 +13,19 @@ public class MazePlayerController : MonoBehaviour
 
     private RectTransform rectTransform;
     private LaundryBabyManager gameManager;
+    private float mazeStartDelay = 0.5f; // Prevent immediate exit collision
+    private float timeSinceMazeStart = 0f;
 
     public bool isGoingToNursery = true; 
 
     void Awake()
     {
         rectTransform = GetComponent<RectTransform>();
+    }
+
+    void OnDisable()
+    {
+        ResetToStart(); // Reset position when maze is hidden
     }
 
     void Start()
@@ -29,9 +36,16 @@ public class MazePlayerController : MonoBehaviour
 
     void Update()
     {
+        timeSinceMazeStart += Time.deltaTime;
+        
         HandleMovementWithWalls();
         CheckTeleportTraps();
-        CheckExitCollision();
+        
+        // Only check exit collision after a short delay to prevent spawning on exit
+        if (timeSinceMazeStart > mazeStartDelay)
+        {
+            CheckExitCollision();
+        }
     }
 
     void HandleMovementWithWalls()
@@ -136,11 +150,13 @@ public class MazePlayerController : MonoBehaviour
     {
         gameObject.SetActive(true);
         ResetToStart(); // Make sure this function teleports rectTransform to startPosition!
+        timeSinceMazeStart = 0f; // Reset the delay timer
     }
 
     // Call this to completely hide the maze layout
     public void HideMazeGame()
     {
+        ResetToStart(); // Reset position before hiding
         gameObject.SetActive(false); // Disappears the maze entirely
     }
 }
