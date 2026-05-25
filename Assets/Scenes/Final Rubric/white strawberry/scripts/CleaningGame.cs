@@ -23,6 +23,7 @@ public class CleaningGame : MonoBehaviour
     public RectTransform clothUI;            // Drag your cloth image here
     public List<GameObject> dirtSpots;       // A list of all dirt objects on the table
     private int dirtRemaining;
+    private Vector2 presetClothPos;          // Stores original cloth position
 
     [Header("Phase 2: Trash Collection")]
     public RectTransform trashCanUI;         // The Trash Can UI Image slot
@@ -30,50 +31,116 @@ public class CleaningGame : MonoBehaviour
     private int trashRemaining;
 
     [Header("Phase 3: Vacuuming")]
+    public RectTransform vacuumUI;           // NEW SLOT: Drag your vacuum tool RectTransform here!
     public List<GameObject> dustBunnies;     // Drag all your dust objects here later
+    private Vector2 presetVacuumPos;         // Stores original vacuum position
 
     private Dictionary<GameObject, float> dirtScrubTimers = new Dictionary<GameObject, float>();
     private float scrubRequiredTime = 1.5f; // Player must scrub a spot for 1.5 seconds to clean it
 
+    // MULTI-DAY LOOP BACKUP STORAGE
     private List<GameObject> originalDirtSpots;
-    private List<GameObject> originalDustBunnies;
     private List<GameObject> originalTrashItems;
-    void Start()
-    {
-        // Keep a backup of what scenes started with
-        originalDirtSpots = new List<GameObject>(dirtSpots);
-        originalTrashItems = new List<GameObject>(trashItems);
-        originalDustBunnies = new List<GameObject>(dustBunnies);
+    private List<GameObject> originalDustBunnies;
 
-        InitializeCleaningState();
-    }
+    // DYNAMIC POSITION PRESET DICTIONARIES
+    private Dictionary<GameObject, Vector2> initialObjectPositions = new Dictionary<GameObject, Vector2>();
 
-    void InitializeCleaningState()
+    void OnEnable()
     {
-        timeRemaining = 60f;
+        // 1. Snapshot setup: Save lists the absolute FIRST time the game ever boots up
+        if (originalDirtSpots == null) originalDirtSpots = new List<GameObject>(dirtSpots);
+        if (originalTrashItems == null) originalTrashItems = new List<GameObject>(trashItems);
+        if (originalDustBunnies == null) originalDustBunnies = new List<GameObject>(dustBunnies);
+
+        // Save preset tools positions before they move
+        if (clothUI != null && presetClothPos == Vector2.zero) presetClothPos = clothUI.anchoredPosition;
+        if (vacuumUI != null && presetVacuumPos == Vector2.zero) presetVacuumPos = vacuumUI.anchoredPosition;
+
+        // Save starting layout positions for every individual trash piece, dirt spot, and dust bunny
+        SaveInitialPositionsForList(originalDirtSpots);
+        SaveInitialPositionsForList(originalTrashItems);
+        SaveInitialPositionsForList(originalDustBunnies);
+
+        // 2. Clear tracking references and restore master lists
+        dirtSpots = new List<GameObject>(originalDirtSpots);
+        trashItems = new List<GameObject>(originalTrashItems);
+        dustBunnies = new List<GameObject>(originalDustBunnies);
+
+        // 3. Forcefully wake up items, reset visibility, and snap them back to their exact presets!
+        ResetAndPositionItems(dirtSpots, true);
+        ResetAndPositionItems(trashItems, false);
+        ResetAndPositionItems(dustBunnies, false);
+
+        // 4. Snap cleaning tools back to their starting spots
+        if (clothUI != null) clothUI.anchoredPosition = presetClothPos;
+        if (vacuumUI != null) vacuumUI.anchoredPosition = presetVacuumPos;
+
+        // 5. Reset clock counters and system values back to defaults
+        timeRemaining = 60f; 
         isGameActive = true;
-
         dirtRemaining = dirtSpots.Count;
         trashRemaining = trashItems.Count;
+        dirtScrubTimers.Clear();
 
-        // Set up initial panel states
-        tableWipePanel.SetActive(true);
-        trashCollectPanel.SetActive(false);
-        vacuumPanel.SetActive(false);
+        // 6. Turn off old end-screens and drop back into Phase 1 (Table Wipe)
+        if (tableWipePanel != null) tableWipePanel.SetActive(true);
+        if (trashCollectPanel != null) trashCollectPanel.SetActive(false);
+        if (vacuumPanel != null) vacuumPanel.SetActive(false);
         if (winPanel != null) winPanel.SetActive(false);
         if (failPanel != null) failPanel.SetActive(false);
-        
-        dirtScrubTimers.Clear();
+
+        Debug.Log("Cleaning Game has successfully restored all items, positions, and clocks for the new day!");
+    }
+
+    // Helper function to memorize where items belong
+    void SaveInitialPositionsForList(List<GameObject> list)
+    {
+        foreach (GameObject obj in list)
+        {
+            if (obj != null && !initialObjectPositions.ContainsKey(obj))
+            {
+                RectTransform rt = obj.GetComponent<RectTransform>();
+                if (rt != null)
+                {
+                    initialObjectPositions[obj] = rt.anchoredPosition;
+                }
+            }
+        }
+    }
+
+    // Helper function to wake up items and force them back to their presets
+    void ResetAndPositionItems(List<GameObject> list, bool isDirtPhase)
+    {
+        foreach (GameObject obj in list)
+        {
+            if (obj != null)
+            {
+                obj.SetActive(true);
+
+                // Snap the rect back to its exact saved layout coordinates
+                RectTransform rt = obj.GetComponent<RectTransform>();
+                if (rt != null && initialObjectPositions.ContainsKey(obj))
+                {
+                    rt.anchoredPosition = initialObjectPositions[obj];
+                }
+
+                // Restore alpha opacity if it was faded out during the scrubbing phase
+                if (isDirtPhase)
+                {
+                    Image img = obj.GetComponent<Image>();
+                    if (img != null) { Color c = img.color; c.a = 1f; img.color = c; }
+                }
+            }
+        }
     }
 
     void Update()
     {
         if (!isGameActive) return;
 
-        // Ticking down the 1-minute clock
         HandleGlobalTimer();
 
-        // If we are in Phase 1, handle the dragging/wiping logic
         if (tableWipePanel.activeSelf)
         {
             HandleWipingLogic();
@@ -84,7 +151,6 @@ public class CleaningGame : MonoBehaviour
     {
         timeRemaining -= Time.deltaTime;
         
-        // Formats the timer into a clean 0:00 style
         int minutes = Mathf.FloorToInt(timeRemaining / 60);
         int seconds = Mathf.FloorToInt(timeRemaining % 60);
         timerText.text = $"Time Left:   <color=red>{minutes}:{seconds:D2}</color>";
@@ -93,9 +159,6 @@ public class CleaningGame : MonoBehaviour
         {
             timeRemaining = 0;
             isGameActive = false;
-            Debug.Log("Out of time! The living room is still messy.");
-            
-            // HOOKED UP: This now instantly calls your fail popup screen!
             LoseGame();
         }
     }
@@ -103,7 +166,6 @@ public class CleaningGame : MonoBehaviour
     #region PHASE 1: WIPING CODE
     void HandleWipingLogic()
     {
-        // Follow the mouse position smoothly while holding click
         if (Input.GetMouseButton(0))
         {
             Vector2 mousePos;
@@ -115,60 +177,51 @@ public class CleaningGame : MonoBehaviour
             );
             clothUI.anchoredPosition = mousePos;
 
-            // Check if our cloth is touching any dirt spots
             CheckDirtCollision();
         }
     }
 
     void CheckDirtCollision()
     {
-        // Loop backwards through the dirt spots
         for (int i = dirtSpots.Count - 1; i >= 0; i--)
         {
             GameObject currentDirt = dirtSpots[i];
             if (currentDirt == null) continue;
 
-            // Calculate distance between cloth and this dirt spot
             float distance = Vector2.Distance(clothUI.anchoredPosition, currentDirt.GetComponent<RectTransform>().anchoredPosition);
             
-            // Is the cloth actively touching the dirt?
             if (distance < 50f) 
             {
-                // If this is the first time touching this dirt, start a timer for it
                 if (!dirtScrubTimers.ContainsKey(currentDirt))
                 {
                     dirtScrubTimers[currentDirt] = 0f;
                 }
 
-                // Add time to this specific dirt's scrub timer
                 dirtScrubTimers[currentDirt] += Time.deltaTime;
 
-                // VISUAL EFFECT: Make the dirt slowly fade out the more you scrub it!
                 Image dirtImage = currentDirt.GetComponent<Image>();
                 if (dirtImage != null)
                 {
                     float progress = dirtScrubTimers[currentDirt] / scrubRequiredTime;
                     Color c = dirtImage.color;
-                    c.a = 1f - progress; // Lower the visibility (alpha) based on progress
+                    c.a = 1f - progress; 
                     dirtImage.color = c;
                 }
 
-                // If they have scrubbed long enough, completely delete the dirt!
                 if (dirtScrubTimers[currentDirt] >= scrubRequiredTime)
                 {
                     if (cleanEffectPrefab != null)
                     {
-                        // Create the sparkling effect exactly where the dirt was!
                         GameObject effect = Instantiate(cleanEffectPrefab, tableWipePanel.transform);
                         effect.GetComponent<RectTransform>().anchoredPosition = currentDirt.GetComponent<RectTransform>().anchoredPosition;
                         Destroy(effect, 1f); 
                     }
 
                     dirtScrubTimers.Remove(currentDirt);
-                    Destroy(currentDirt);
+                    currentDirt.SetActive(false); // Hide it
+                    
                     dirtSpots.RemoveAt(i);
                     dirtRemaining--;
-                    Debug.Log($"Scrubbed away! Dirt remaining: {dirtRemaining}");
 
                     if (dirtRemaining <= 0)
                     {
@@ -181,7 +234,6 @@ public class CleaningGame : MonoBehaviour
 
     void SwitchToTrashPhase()
     {
-        Debug.Log("Table clean! Moving to Trash Collection.");
         tableWipePanel.SetActive(false);
         trashCollectPanel.SetActive(true); 
         trashRemaining = trashItems.Count; 
@@ -195,12 +247,23 @@ public class CleaningGame : MonoBehaviour
 
         if (distance < 80f) 
         {
-            trashItems.Remove(droppedTrash);
-            Destroy(droppedTrash);
-            trashRemaining--;
-            Debug.Log($"Trash thrown away! Remaining: {trashRemaining}");
+            // 1. Hide it immediately so it vanishes from the player's view
+            droppedTrash.SetActive(false); 
+            
+            // 2. Count how many trash items are still active on screen right now
+            int activeTrashCount = 0;
+            foreach (GameObject trash in trashItems)
+            {
+                if (trash != null && trash.activeSelf)
+                {
+                    activeTrashCount++;
+                }
+            }
 
-            if (trashRemaining <= 0)
+            Debug.Log($"Trash thrown away! Items still left in the room: {activeTrashCount}");
+
+            // 3. If there is no active trash left visible, automatically advance!
+            if (activeTrashCount <= 0)
             {
                 SwitchToVacuumPhase();
             }
@@ -213,6 +276,7 @@ public class CleaningGame : MonoBehaviour
         trashCollectPanel.SetActive(false);
         vacuumPanel.SetActive(true); 
     }
+
     #endregion
 
     #region PHASE 3: VACUUM CODE
@@ -229,8 +293,7 @@ public class CleaningGame : MonoBehaviour
                 if (distance < 50f)
                 {
                     dustBunnies.RemoveAt(i);
-                    Destroy(dust);
-                    Debug.Log($"Sucked up dust! Remaining: {dustBunnies.Count}");
+                    dust.SetActive(false); // Hide it
 
                     if (dustBunnies.Count <= 0)
                     {
@@ -243,8 +306,7 @@ public class CleaningGame : MonoBehaviour
 
     void WinGame()
     {
-        Debug.Log("CONGRATULATIONS! The entire room is completely spotless!");
-        isGameActive = false; // Freeze the clock on win!
+        isGameActive = false; 
         vacuumPanel.SetActive(false);
         
         if (winPanel != null)
@@ -257,10 +319,7 @@ public class CleaningGame : MonoBehaviour
     #region FAIL SCREEN CODE
     void LoseGame()
     {
-        Debug.Log("Game Over! You ran out of time.");
         isGameActive = false;
-
-        // Hide active cleaning graphics
         tableWipePanel.SetActive(false);
         trashCollectPanel.SetActive(false);
         vacuumPanel.SetActive(false);
@@ -278,25 +337,4 @@ public class CleaningGame : MonoBehaviour
         );
     }
     #endregion
-
-    public void ResetMiniGameForNewDay()
-    {
-        // 1. If objects were destroyed, we need to respawn or re-enable them.
-        // If your game just hides them or if you want to make sure the lists aren't empty:
-        dirtSpots = new List<GameObject>(originalDirtSpots);
-        trashItems = new List<GameObject>(originalTrashItems);
-        dustBunnies = new List<GameObject>(originalDustBunnies);
-
-        // If you physically Destroy() objects on Day 1, we must make sure they are active.
-        // (Note: If you used Destroy(), we would need to Instantiate copies, but if your game 
-        // objects are still in the hierarchy, this loop will reactivate them!)
-        foreach(GameObject dirt in dirtSpots) { if(dirt != null) { dirt.SetActive(true); Image img = dirt.GetComponent<Image>(); if(img != null) { Color c = img.color; c.a = 1f; img.color = c; } } }
-        foreach(GameObject trash in trashItems) { if(trash != null) trash.SetActive(true); }
-        foreach(GameObject dust in dustBunnies) { if(dust != null) dust.SetActive(true); }
-
-        // 2. Re-run your start values
-        InitializeCleaningState();
-
-        Debug.Log("Cleaning Game lists and clocks reset for the new day!");
-    }
 }

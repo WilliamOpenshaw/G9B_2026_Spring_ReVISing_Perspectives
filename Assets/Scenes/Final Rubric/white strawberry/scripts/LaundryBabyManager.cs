@@ -51,11 +51,24 @@ public class LaundryBabyManager : MonoBehaviour
     public bool isGameActive = true;
     private bool isGameOver = false;
 
-    void Start()
+    void OnEnable()
     {
+        // Reset all states and clear any active game-over/win states from yesterday
+        isGameOver = false;
+        playerWon = false;
+        isBabyCrying = false;
+        isCueActive = false;
+        //laundryItemsCompleted = 0; 
+        gameTimer = gameTimeLimit; 
+        Time.timeScale = 1f; // Make sure the engine isn't frozen!
+
+        // Hide win/lose panels
+        if (winPanel != null) winPanel.SetActive(false);
+        if (losePanel != null) losePanel.SetActive(false);
+        if (babyCryCueUI != null) babyCryCueUI.SetActive(false);
+
         GoToLaundryRoom();
         ResetCryTimer();
-        gameTimer = gameTimeLimit; // Start the game timer
     }
 
     void Update()
