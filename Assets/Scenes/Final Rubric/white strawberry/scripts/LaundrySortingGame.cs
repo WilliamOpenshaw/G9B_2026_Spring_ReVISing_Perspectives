@@ -28,12 +28,21 @@ public class LaundrySortingGame : MonoBehaviour
         //gameManager = Object.FindFirstObjectByType<LaundryBabyManager>();
     }
 
-    void Start()
+    void OnEnable()
     {
-        InitializeLaundryGame();
-        StartSortingGame(); // Kept on for testing!
-    }
+        // REMOVED InitializeLaundryGame(); from here so it stops wiping your score!
+        
+        isGameActive = true; 
 
+        if (laundryPanel != null) laundryPanel.SetActive(true);
+        if (winPanel != null) winPanel.SetActive(false); 
+
+        // We still want to update the UI text and spawn a piece of clothing so the room works!
+        UpdateScoreUI();
+        SpawnNextClothing();
+        
+        Debug.Log($"[LAUNDRY] Returned to room! Continuing progress from: {currentSortedCount} items.");
+    }
     public void InitializeLaundryGame()
     {
         currentSortedCount = 0;
@@ -175,5 +184,20 @@ public class LaundrySortingGame : MonoBehaviour
 
         UpdateScoreUI();
         Debug.Log("Laundry Sorting Game has been fully reset for the new day!");
+    }
+
+    public void ResetLaundryProgressForNewDay()
+    {
+        currentSortedCount = 0;
+        
+        // NEW: Also reach into the baby manager and wipe its tracking variable!
+        if (gameManager != null)
+        {
+            // We use a clean assignment to force it back to zero
+            System.Reflection.FieldInfo field = gameManager.GetType().GetField("laundryItemsCompleted", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public);
+            if (field != null) field.SetValue(gameManager, 0);
+        }
+        
+        Debug.Log("Laundry score and manager score completely wiped for the start of a new day!");
     }
 }

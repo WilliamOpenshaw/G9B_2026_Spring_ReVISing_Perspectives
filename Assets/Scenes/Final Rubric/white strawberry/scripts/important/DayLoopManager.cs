@@ -21,6 +21,12 @@ public class DayLoopManager : MonoBehaviour
     public TextMeshProUGUI summaryMessageText; 
     public TextMeshProUGUI sleepButtonLabelText; 
 
+    [Header("End Game Canvas Panels")]
+    public GameObject finalGameWinPanel;  // Drag your master Win Canvas Panel here
+    public GameObject finalGameLosePanel; // Drag your master Game Over/Lose Canvas Panel here
+
+    public EndGameBranchManager branchManagerScript;
+
     private bool canSleepAndHeal = true;
 
     // Call this if they pass a task
@@ -78,70 +84,96 @@ public class DayLoopManager : MonoBehaviour
 
     public void ExecuteSleepButtonAction()
     {
-        // Give health back using your health script's built-in function!
+        // (Keep your health restoration code here)
         if (canSleepAndHeal && realHealthScript != null && realHealthScript.slider != null)
         {
             int currentHP = (int)realHealthScript.slider.value;
             int newHP = currentHP + 10;
             if (newHP > 100) newHP = 100;
-
             realHealthScript.SetHealth(newHP); 
         }
 
-        // Close the screen summary box so they can see the game again
         if (endOfDaySummaryPanel != null) endOfDaySummaryPanel.SetActive(false);
 
-        // ========================================================
-        // FRESH RESET: WIPE MINI-GAME PROGRESS BEFORE ADVANCING THE DAY!
-        // ========================================================
-        CookingGame cookingScript = Object.FindFirstObjectByType<CookingGame>();
-        if (cookingScript != null)
+        LaundrySortingGame laundryScript = FindFirstObjectByType<LaundrySortingGame>();
+        if (laundryScript != null)
         {
-            cookingScript.ResetMiniGameForNewDay();
+            laundryScript.ResetLaundryProgressForNewDay();
         }
-
-        CleaningGame cleaningScript = Object.FindFirstObjectByType<CleaningGame>();
-        if (cleaningScript != null)
-        {
-            cleaningScript.ResetMiniGameForNewDay();
-        }
-        LaundrySortingGame laundryScript = Object.FindFirstObjectByType<LaundrySortingGame>();
-        if (laundryScript != null) laundryScript.ResetMiniGameForNewDay();
-
-    
 
         // Advance to the next day
         currentDay++;
 
-        // DYNAMIC ROUTING: Turn on the correct day based on the new number!
+        // DYNAMIC ROUTING: Turning on these parents will now automatically trigger the OnEnable() resets above!
         if (currentDay == 2)
         {
-            if (day1GameplayParent != null) day1GameplayParent.SetActive(false); // Turn off Day 1
-            if (day2GameplayParent != null) day2GameplayParent.SetActive(true);  // Turn on Day 2
+            if (day1GameplayParent != null) day1GameplayParent.SetActive(false); 
+            if (day2GameplayParent != null) day2GameplayParent.SetActive(true);  
             Debug.Log("Welcome to Day 2!");
         }
         else if (currentDay == 3)
         {
-            if (day2GameplayParent != null) day2GameplayParent.SetActive(false); // Turn off Day 2
-            if (day3GameplayParent != null) day3GameplayParent.SetActive(true);  // Turn on Day 3
+            if (day2GameplayParent != null) day2GameplayParent.SetActive(false); 
+            if (day3GameplayParent != null) day3GameplayParent.SetActive(true);  
             Debug.Log("Welcome to Day 3!");
         }
         else if (currentDay > 3)
         {
-            // If they sleep past Day 3, show the final game over or win screen!
+            Time.timeScale = 0f; // Freeze updates
+            if (day3GameplayParent != null) day3GameplayParent.SetActive(false); 
+
+            // NEW: Forcefully hide the HUD elements for ALL endings right here!
+            if (branchManagerScript != null)
+            {
+                if (branchManagerScript.healthBarHUD != null) branchManagerScript.healthBarHUD.SetActive(false);
+                if (branchManagerScript.moneyBarHUD != null) branchManagerScript.moneyBarHUD.SetActive(false);
+            }
+
+            // Get current health values from your active health slider script
+            int playerFinalHealth = (realHealthScript != null && realHealthScript.slider != null) 
+                ? (int)realHealthScript.slider.value 
+                : 100;
+
+            // ========================================================
+            // HEALTH CRASH TRAP SYSTEM (Health is less than 20)
+            // ========================================================
+            if (playerFinalHealth < 20)
+            {
+                Debug.Log("Player health collapsed below 20! Booting into Crossroads.");
+                if (branchManagerScript != null)
+                {
+                    branchManagerScript.LaunchCrossroadsGamble();
+                }
+                return; // HALT! Bypasses normal money calculations entirely
+            }
+
+            // ========================================================
+            // STANDARD ENDINGS (Survives healthy)
+            // ========================================================
             int finalMoney = (realMoneyScript != null) ? realMoneyScript.currentMoney : 0;
             
             if (finalMoney >= targetDebtGoal)
             {
-                summaryMessageText.text = "YOU WIN!\n\nYou paid off your debt and survived the loop.";
+                // GOOD ENDING
+                if (finalGameWinPanel != null) finalGameWinPanel.SetActive(true);
+                if (summaryMessageText != null) 
+                    summaryMessageText.text = $"GOOD ENDING\n\nYou earned ${finalMoney} and cleared your debt. You are healthy, but life remains a stressful grind under your broker.";
             }
             else
             {
-                summaryMessageText.text = "GAME OVER\n\nYou ran out of time to clear your debt.";
+                // DEPORTED ENDING 1 (RUN OUT OF MONEY)
+                if (finalGameLosePanel != null) finalGameLosePanel.SetActive(true);
+                if (summaryMessageText != null) 
+                    summaryMessageText.text = $"DEPORTED (DEBT FAILURE)\n\nYou failed to reach the required ${targetDebtGoal} to clear your debt layout.";
             }
-            
-            if (sleepButtonLabelText != null) sleepButtonLabelText.text = "...";
-            if (endOfDaySummaryPanel != null) endOfDaySummaryPanel.SetActive(true);
         }
+    }
+    public void ClickToRestartEntireGame()
+    {
+        Time.timeScale = 1f; // Unfreeze time!
+        // Reloads your current scene from scratch, wiping all memory completely fresh
+        UnityEngine.SceneManagement.SceneManager.LoadScene(
+            UnityEngine.SceneManagement.SceneManager.GetActiveScene().name
+        );
     }
 }
