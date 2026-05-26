@@ -38882,7 +38882,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1268484040
 RectTransform:
   m_ObjectHideFlags: 0
@@ -59705,8 +59705,8 @@ MonoBehaviour:
   nurseryPanel: {fileID: 1423225392}
   babyCryCueUI: {fileID: 611938932}
   responseTimeLimit: 15
-  minTimeBetweenCries: 10
-  maxTimeBetweenCries: 16
+  minTimeBetweenCries: 25
+  maxTimeBetweenCries: 34
   balanceGameScript: {fileID: 1423225397}
   mazeScript: {fileID: 2086114616}
   maze1Start: {fileID: 864216751}
