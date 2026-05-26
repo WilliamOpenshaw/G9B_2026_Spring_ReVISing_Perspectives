@@ -89,4 +89,13 @@ public class moneymanager : MonoBehaviour
             hasWarnedNoText = true;
         }
     }
+    public void SetPlayerCash(int amount)
+    {
+        currentMoney = amount; // Force the backend variable to the new value
+        
+        // IMPORTANT: Make sure your text UI updates immediately so the screen changes!
+        UpdateMoneyText(); 
+        
+        Debug.Log($"[MONEY RESET] Player cash manually forced to: ${amount}");
+    }
 }
