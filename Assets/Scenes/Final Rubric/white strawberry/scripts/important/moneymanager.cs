@@ -6,14 +6,13 @@ using TMPro;
 public class moneymanager : MonoBehaviour
 {
     public TMP_Text moneyText;
-    public int startMoney = 0;
     public int currentMoney;
 
     int lastMoney;
 
     void Awake()
     {
-        currentMoney = startMoney;
+        currentMoney = 0;
         lastMoney = currentMoney;
     }
 
@@ -21,6 +20,15 @@ public class moneymanager : MonoBehaviour
 
     void Start()
     {
+        if (DifficultyManager.CurrentMode == DifficultyManager.GameMode.Baby) {
+        SetPlayerCash(75);
+        }
+        else if (DifficultyManager.CurrentMode == DifficultyManager.GameMode.Easy) {
+        SetPlayerCash(50);
+        }
+        else {
+        SetPlayerCash(0);
+        }
         if (moneyText == null)
             moneyText = GetComponent<TMP_Text>();
 
