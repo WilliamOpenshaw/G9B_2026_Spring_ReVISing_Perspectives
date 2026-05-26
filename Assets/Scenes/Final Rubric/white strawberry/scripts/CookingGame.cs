@@ -47,25 +47,31 @@ public class CookingGame : MonoBehaviour
 
     void OnEnable()
     {
-        // Force every single variable back to its starting state
-        currentTimer = totalGameTime;
+        // 1. FORCE THE MASTER GATEWAYS OPEN FOR THE NEW DAY
+        isGameActive = true;             // EMERGENCY FIX: Unfreeze your clicks!
+        isCookingPhaseActive = false;
+        isShelfPhaseComplete = false;
+        currentIngredientIndex = 0;
         completedDishes = 0;
         sliderSpeed = 2f; 
+        currentTimer = totalGameTime;    // Reset the clock back to full time
 
-        // Set up the exact recipe for Dish #1
+        // 2. Set up the exact recipe for Dish #1
         LoadDishRecipe(1);
 
-        // Force the correct UI panels to show/hide
+        // 3. Force the correct UI panels to show/hide cleanly
         if (ingredientPanel != null) ingredientPanel.SetActive(true);
         if (stovePanel != null) stovePanel.SetActive(false);
-        if (popupPanel != null) popupPanel.SetActive(false);
+        
+        // EMERGENCY FIX: Completely shut off any old penalty boxes blocking your clicks!
+        if (popupPanel != null) popupPanel.SetActive(false); 
         if (winPanel != null) winPanel.SetActive(false);
         if (continueButton != null) continueButton.SetActive(false);
 
-        // Refresh the text to show 0/3 dishes completed
+        // 4. Refresh the text layout
         UpdateRecipeListUI();
         
-        Debug.Log("Cooking Game auto-reset successfully because its panel was turned on!");
+        Debug.Log("Cooking Game master-unfrozen and successfully reset for the day!");
     }
 
     // Helper method to completely assign the ingredients based on current dish index
@@ -96,11 +102,26 @@ public class CookingGame : MonoBehaviour
 
     void HandleGlobalTimer()
     {
+        // 1. EMERGENCY SAFETY GATES: Stop counting if time is already up or game is inactive
+        if (currentTimer <= 0 || !isGameActive) 
+        {
+            timerText.text = "Time Left: <color=red>0:00</color>";
+            return; 
+        }
+
+        // 2. Countdown normally
         currentTimer -= Time.deltaTime;
+
+        // 3. FORCE clamp so the math can NEVER drop below absolute zero
+        if (currentTimer < 0) currentTimer = 0;
+
         int minutes = Mathf.FloorToInt(currentTimer / 60);
         int seconds = Mathf.FloorToInt(currentTimer % 60);
+        
+        // 4. Update the text UI safely
         timerText.text = $"Time Left: <color=red>{minutes}:{seconds:D2}</color>";
 
+        // 5. Trigger Game Over cleanly at exactly 0
         if (currentTimer <= 0)
         {
             GameOver(false); 
@@ -152,8 +173,14 @@ public class CookingGame : MonoBehaviour
     {
         popupText.text = $"Wrong item! You grabbed <b>{wrongItem}</b> instead of <b>{recipeOrder[currentIngredientIndex]}</b>.\n\n<i>Waiting 3 seconds...</i>";
         popupPanel.SetActive(true); 
+        
         yield return new WaitForSeconds(3f); 
-        popupPanel.SetActive(false); 
+        
+        // SAFETY CHECK: Only turn off the popup if the game hasn't already timed out!
+        if (isGameActive)
+        {
+            popupPanel.SetActive(false); 
+        }
     }
     #endregion
 
