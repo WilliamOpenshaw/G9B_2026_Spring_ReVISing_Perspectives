@@ -10,6 +10,7 @@ public class LaundrySortingGame : MonoBehaviour
     public GameObject winPanel;       
     public Image clothingDisplayItem;    
     public TextMeshProUGUI progressText; 
+    public GameObject goToLivingRoomButton;
 
     [Header("Game Settings")]
     public List<Color> coloredPool;       
@@ -30,18 +31,36 @@ public class LaundrySortingGame : MonoBehaviour
 
     void OnEnable()
     {
-        // REMOVED InitializeLaundryGame(); from here so it stops wiping your score!
-        
-        isGameActive = true; 
+        if (goToLivingRoomButton != null)
+        {
+        // This evaluates to TRUE only if they picked Hard Mode. 
+        // If they chose Easy or Medium, it automatically sets it to FALSE and hides it!
+        goToLivingRoomButton.SetActive(DifficultyManager.CurrentMode == DifficultyManager.GameMode.Hard);
+        }
+        //InitializeLaundryGame(); // Clears internal counter back to 0
+        isGameActive = true;     // Enables inputs
 
-        if (laundryPanel != null) laundryPanel.SetActive(true);
-        if (winPanel != null) winPanel.SetActive(false); 
+        // 1. DYNAMIC DIFFICULTY ADJUSTMENT: Set how many clothes are needed!
+        if (DifficultyManager.CurrentMode == DifficultyManager.GameMode.Baby) // (Easy Mode Button)
+        {
+            itemsToWin = 20; 
+        }
+        else if (DifficultyManager.CurrentMode == DifficultyManager.GameMode.Easy) // (Medium Mode Button)
+        {
+            itemsToWin = 30;
+        }
+        else // Hard Mode
+        {
+            itemsToWin = 50;
+        }
 
-        // We still want to update the UI text and spawn a piece of clothing so the room works!
-        UpdateScoreUI();
-        SpawnNextClothing();
+        if (laundryPanel != null) laundryPanel.SetActive(true); //
+        if (winPanel != null) winPanel.SetActive(false);        //
+
+        UpdateScoreUI();     // Refreshes text display with new targets
+        SpawnNextClothing(); // Spawns first clothing item
         
-        Debug.Log($"[LAUNDRY] Returned to room! Continuing progress from: {currentSortedCount} items.");
+        Debug.Log($"Laundry Sorting Game loaded on {DifficultyManager.CurrentMode} mode! Target: {itemsToWin} clothes.");
     }
     public void InitializeLaundryGame()
     {

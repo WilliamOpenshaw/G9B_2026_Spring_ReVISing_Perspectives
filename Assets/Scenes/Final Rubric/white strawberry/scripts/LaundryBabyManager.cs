@@ -94,21 +94,22 @@ public class LaundryBabyManager : MonoBehaviour
         }
 
         // Baby can only cry when player is in the laundry room
-        if (!isBabyCrying && laundryPanel.activeSelf)
+        if (!isBabyCrying && laundryPanel.activeSelf) //
         {
-            cryEventTimer -= Time.deltaTime;
-            if (cryEventTimer <= 0)
+            // CRITICAL SAFETY CHECK: Only count down the cry timer if the player is on HARD MODE!
+            if (DifficultyManager.CurrentMode == DifficultyManager.GameMode.Hard)
             {
-                TriggerCryAlert();
+                cryEventTimer -= Time.deltaTime; //
+                if (cryEventTimer <= 0) //
+                {
+                    TriggerCryAlert(); //
+                }
             }
-        }
-
-        if (isCueActive && !nurseryPanel.activeSelf)
-        {
-            responseTimer -= Time.deltaTime;
-            if (responseTimer <= 0)
+            else
             {
-                TriggerBabyCryGameOver(); 
+                // On Easy or Medium, make sure the alert UI can NEVER accidentally turn on
+                if (babyCryCueUI != null && babyCryCueUI.activeSelf) 
+                    babyCryCueUI.SetActive(false);
             }
         }
     }
