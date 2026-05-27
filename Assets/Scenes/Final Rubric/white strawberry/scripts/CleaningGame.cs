@@ -272,7 +272,20 @@ public class CleaningGame : MonoBehaviour
 
     void SwitchToVacuumPhase()
     {
-        Debug.Log("Room is tidy! Time to vacuum under the sofa.");
+        Debug.Log("Room is tidy! Checking difficulty mode before vacuuming...");
+        
+        // 1. HIJACK CHECKPOINT: If the player is on EASY mode, skip Phase 3 and win immediately!
+        if (DifficultyManager.CurrentMode == DifficultyManager.GameMode.Baby) // (Easy Mode Button)
+        {
+            Debug.Log("Easy Mode detected! Bypassing vacuum stage completely.");
+            trashCollectPanel.SetActive(false);
+            
+            // Instantly skip directly to your win layout function
+            WinGame(); 
+            return; // Exit out early so the vacuum code below never touches the screen!
+        }
+
+        // 2. Otherwise (Medium or Hard Mode), proceed to vacuum as normal
         trashCollectPanel.SetActive(false);
         vacuumPanel.SetActive(true); 
     }

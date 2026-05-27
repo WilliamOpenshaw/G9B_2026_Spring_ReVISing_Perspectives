@@ -7,6 +7,7 @@ public class CookingGame : MonoBehaviour
 {
     [Header("Game Panels")]
     public GameObject winPanel; // Drag your WinPanel here
+    public GameObject FailPanel;
     public GameObject ingredientPanel;     
     public GameObject stovePanel;          
     public GameObject popupPanel;    
@@ -16,6 +17,9 @@ public class CookingGame : MonoBehaviour
     private List<string> recipeOrder = new List<string>();
     private int currentIngredientIndex = 0;
     private bool isShelfPhaseComplete = false;
+
+    private int healthCostForStoryPenalty = 50; 
+    private int totalDishesToWin = 3;
 
     // HAND-CRAFTED 3-DISH MENU
     private List<string> dish1Recipe = new List<string> { "Onion", "Oil", "Rice" };
@@ -47,31 +51,45 @@ public class CookingGame : MonoBehaviour
 
     void OnEnable()
     {
-        // 1. FORCE THE MASTER GATEWAYS OPEN FOR THE NEW DAY
-        isGameActive = true;             // EMERGENCY FIX: Unfreeze your clicks!
+        // EMERGENCY SAFETY FIX: Force all input gates open and clear old blocking popups
+        isGameActive = true;             
         isCookingPhaseActive = false;
         isShelfPhaseComplete = false;
         currentIngredientIndex = 0;
         completedDishes = 0;
-        sliderSpeed = 2f; 
-        currentTimer = totalGameTime;    // Reset the clock back to full time
 
-        // 2. Set up the exact recipe for Dish #1
-        LoadDishRecipe(1);
-
-        // 3. Force the correct UI panels to show/hide cleanly
-        if (ingredientPanel != null) ingredientPanel.SetActive(true);
-        if (stovePanel != null) stovePanel.SetActive(false);
-        
-        // EMERGENCY FIX: Completely shut off any old penalty boxes blocking your clicks!
         if (popupPanel != null) popupPanel.SetActive(false); 
         if (winPanel != null) winPanel.SetActive(false);
         if (continueButton != null) continueButton.SetActive(false);
 
-        // 4. Refresh the text layout
+        // 2. DYNAMIC DIFFICULTY SCALE: Set up dishes, speeds, and the story end penalties
+        if (DifficultyManager.CurrentMode == DifficultyManager.GameMode.Baby) // Easy Mode Button
+        {
+            totalDishesToWin = 1;
+            sliderSpeed = 1.0f;           // Super slow and easy slider
+            healthCostForStoryPenalty = 0; // No onion allergy penalty! Family is totally happy
+        }
+        else if (DifficultyManager.CurrentMode == DifficultyManager.GameMode.Easy) // Medium Mode Button
+        {
+            totalDishesToWin = 2;
+            sliderSpeed = 1.5f;            // Noticeably slower, manageable speed
+            healthCostForStoryPenalty = 30; // Mild story penalty
+        }
+        else // Hard Mode
+        {
+            totalDishesToWin = 3;
+            sliderSpeed = 2.5f;            // Original challenging fast speed
+            healthCostForStoryPenalty = 50; // The brutal onion allergy 50 HP story hit
+        }
+
+        currentTimer = totalGameTime; // Reset clock
+        LoadDishRecipe(1);            // Start dish 1
+
+        if (ingredientPanel != null) ingredientPanel.SetActive(true);
+        if (stovePanel != null) stovePanel.SetActive(false);
+
         UpdateRecipeListUI();
-        
-        Debug.Log("Cooking Game master-unfrozen and successfully reset for the day!");
+        Debug.Log($"Kitchen loaded on {DifficultyManager.CurrentMode}! Dishes needed: {totalDishesToWin}, Speed: {sliderSpeed}");
     }
 
     // Helper method to completely assign the ingredients based on current dish index
@@ -157,7 +175,7 @@ public class CookingGame : MonoBehaviour
         if (completedDishes == 1) currentDishTitle = "Egg Drop Soup";
         else if (completedDishes == 2) currentDishTitle = "Stir-Fry Noodles";
 
-        recipeListText.text = $"<b>Dishes: {completedDishes}/{REQUIRED_DISHES}</b>\n";
+        recipeListText.text = $"<b>Dishes: {completedDishes}/{totalDishesToWin}</b>\n";
         recipeListText.text += $"<b>Making: <color=#4A2306>{currentDishTitle}</color></b>\n\n";
         recipeListText.text += "<b>Ingredients Needed:</b>\n";
 
@@ -215,7 +233,7 @@ public class CookingGame : MonoBehaviour
         {
             completedDishes++;
             
-            if (completedDishes >= REQUIRED_DISHES)
+            if (completedDishes >= totalDishesToWin)
             {
                 GameOver(true); 
             }
@@ -268,16 +286,24 @@ public class CookingGame : MonoBehaviour
 
         if (success) 
         {
-            winPanel.SetActive(true);
-            popupPanel.SetActive(false); 
-            continueButton.SetActive(false); 
-            Debug.Log("Game ended: PLAYER WON!");
+        winPanel.SetActive(true);
+        popupPanel.SetActive(false); 
+        continueButton.SetActive(false); 
+
+        // REACH OUT AND USE YOUR CLEAN NEW HEALTH FUNCTION
+        healthbar playerHealth = FindFirstObjectByType<healthbar>();
+        if (playerHealth != null)
+        {
+            playerHealth.ReduceHealthBy(healthCostForStoryPenalty);
+            Debug.Log($"Cooking penalty applied cleanly: -{healthCostForStoryPenalty} HP");
+        }
         }
         else
         {
-            popupPanel.SetActive(true);
+            popupPanel.SetActive(false);
             winPanel.SetActive(false);
-            continueButton.SetActive(true); 
+            continueButton.SetActive(false);
+            FailPanel.SetActive(true); 
             
             popupText.text = "<b>GAME OVER!</b>\nYou ran out of time. The family is angry.";
             Debug.Log("Game ended: PLAYER LOST!");
