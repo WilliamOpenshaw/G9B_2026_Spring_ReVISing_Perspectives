@@ -7,6 +7,7 @@ public class CookingGame : MonoBehaviour
 {
     [Header("Game Panels")]
     public GameObject winPanel; // Drag your WinPanel here
+    public GameObject FailPanel;
     public GameObject ingredientPanel;     
     public GameObject stovePanel;          
     public GameObject popupPanel;    
@@ -299,9 +300,10 @@ public class CookingGame : MonoBehaviour
         }
         else
         {
-            popupPanel.SetActive(true);
+            popupPanel.SetActive(false);
             winPanel.SetActive(false);
-            continueButton.SetActive(true); 
+            continueButton.SetActive(false);
+            FailPanel.SetActive(true); 
             
             popupText.text = "<b>GAME OVER!</b>\nYou ran out of time. The family is angry.";
             Debug.Log("Game ended: PLAYER LOST!");
