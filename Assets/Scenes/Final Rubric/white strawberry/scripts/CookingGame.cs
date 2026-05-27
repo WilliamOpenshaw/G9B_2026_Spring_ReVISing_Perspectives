@@ -285,19 +285,36 @@ public class CookingGame : MonoBehaviour
         stovePanel.SetActive(false);
 
         if (success) 
-        {
+    {
         winPanel.SetActive(true);
         popupPanel.SetActive(false); 
-        continueButton.SetActive(false); 
+        if (continueButton != null) continueButton.SetActive(false); 
 
-        // REACH OUT AND USE YOUR CLEAN NEW HEALTH FUNCTION
-        healthbar playerHealth = FindFirstObjectByType<healthbar>();
+        // EMERGENCY HEALTH ROUTER
+        healthbar playerHealth = FindFirstObjectByType<healthbar>(FindObjectsInactive.Include);
+
+        // Backup plan: If it still can't find it by type, try finding it by its GameObject name
+        if (playerHealth == null)
+        {
+            GameObject hbObj = GameObject.Find("healthbar") ?? GameObject.Find("HealthBar") ?? GameObject.Find("Health Bar");
+            if (hbObj != null)
+            {
+                playerHealth = hbObj.GetComponent<healthbar>();
+            }
+        }
+
+        // Apply the penalty if we successfully located the health bar
         if (playerHealth != null)
         {
             playerHealth.ReduceHealthBy(healthCostForStoryPenalty);
-            Debug.Log($"Cooking penalty applied cleanly: -{healthCostForStoryPenalty} HP");
+            Debug.Log($"Cooking penalty applied successfully: -{healthCostForStoryPenalty} HP");
         }
+        else
+        {
+            // CRITICAL DEBUGGER: If it still fails, this will tell us exactly why in the console!
+            Debug.LogError("CRITICAL: Cooking Game won, but could NOT find the healthbar object in your scene layout!");
         }
+    }
         else
         {
             popupPanel.SetActive(false);
@@ -307,8 +324,19 @@ public class CookingGame : MonoBehaviour
             
             popupText.text = "<b>GAME OVER!</b>\nYou ran out of time. The family is angry.";
             Debug.Log("Game ended: PLAYER LOST!");
+            healthbar playerHealth = FindFirstObjectByType<healthbar>();
+        if (playerHealth != null)
+        {
+            playerHealth.ReduceHealthBy(healthCostForStoryPenalty);
+            Debug.Log($"Cooking penalty applied cleanly: -{healthCostForStoryPenalty} HP");
+        }
+        else
+        {
+            Debug.LogError("CRITICAL: Cooking Game lost, but could NOT find the healthbar object in your scene layout!");
+        }
         }
     }
+    
 
     public void ResetMiniGameForNewDay()
     {
