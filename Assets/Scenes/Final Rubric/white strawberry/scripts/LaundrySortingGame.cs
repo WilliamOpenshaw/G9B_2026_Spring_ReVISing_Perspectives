@@ -31,21 +31,19 @@ public class LaundrySortingGame : MonoBehaviour
 
     void OnEnable()
     {
-        if (goToLivingRoomButton != null)
-        {
-        // This evaluates to TRUE only if they picked Hard Mode. 
-        // If they chose Easy or Medium, it automatically sets it to FALSE and hides it!
-        goToLivingRoomButton.SetActive(DifficultyManager.CurrentMode == DifficultyManager.GameMode.Hard);
-        }
-        //InitializeLaundryGame(); // Clears internal counter back to 0
-        isGameActive = true;     // Enables inputs
+        // 1. FORCE THE INTERNAL COUNTER BACK TO ZERO!
+        // (Make sure this variable name matches whatever integer counts your clothes, 
+        // like 'sortedClothesCount', 'score', or 'itemsSorted')
+        currentSortedCount = 0; 
 
-        // 1. DYNAMIC DIFFICULTY ADJUSTMENT: Set how many clothes are needed!
-        if (DifficultyManager.CurrentMode == DifficultyManager.GameMode.Baby) // (Easy Mode Button)
+        isGameActive = true; // Enables player inputs
+
+        // 2. DYNAMIC DIFFICULTY ADJUSTMENT: Set how many clothes are needed to win
+        if (DifficultyManager.CurrentMode == DifficultyManager.GameMode.Baby) // Easy Mode
         {
             itemsToWin = 20; 
         }
-        else if (DifficultyManager.CurrentMode == DifficultyManager.GameMode.Easy) // (Medium Mode Button)
+        else if (DifficultyManager.CurrentMode == DifficultyManager.GameMode.Easy) // Medium Mode
         {
             itemsToWin = 30;
         }
@@ -54,23 +52,27 @@ public class LaundrySortingGame : MonoBehaviour
             itemsToWin = 50;
         }
 
+        // Set your panels safely
         if (laundryPanel != null) laundryPanel.SetActive(true); //
         if (winPanel != null) winPanel.SetActive(false);        //
 
+        // 3. FORCE THE SCREEN TEXT TO SHOW THE 0 IMMEDIATELY!
         UpdateScoreUI();     // Refreshes text display with new targets
         SpawnNextClothing(); // Spawns first clothing item
         
-        Debug.Log($"Laundry Sorting Game loaded on {DifficultyManager.CurrentMode} mode! Target: {itemsToWin} clothes.");
+        Debug.Log($"Laundry Game Woke Up! Counter forced to: {currentSortedCount} / {itemsToWin}");
     }
     public void InitializeLaundryGame()
     {
         currentSortedCount = 0;
         UpdateScoreUI();
+
     }
 
     public void StartSortingGame()
     {
         laundryPanel.SetActive(true);
+        currentSortedCount = 0; 
         isGameActive = true;
         UpdateScoreUI();
         SpawnNextClothing();
