@@ -7,7 +7,7 @@ public class mazeTimer : MonoBehaviour
     // Reference to the TextMeshProUGUI component to display the timer
     public TextMeshProUGUI timerText;
     // variables for keeping second and milliseconds on a countdown 1 minute timer
-    public int seconds = 60;
+    public int seconds = 40;
     private int milliseconds = 0;
 
     public GameObject winScreen; // Reference to the win screen GameObject

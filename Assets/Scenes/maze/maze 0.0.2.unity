@@ -3330,7 +3330,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &442781263
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4563,7 +4563,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::mazeTimer
   timerText: {fileID: 597339208}
-  seconds: 10
+  seconds: 40
   winScreen: {fileID: 637142814}
   loseScreen: {fileID: 59845700}
   currentScreen: {fileID: 442781262}
@@ -4648,6 +4648,7 @@ MonoBehaviour:
   - 
   nextWinScreen: {fileID: 637142814}
   failScreen: {fileID: 59845700}
+  currentScreen: {fileID: 442781262}
   index: 0
 --- !u!1 &601152921
 GameObject:
@@ -11251,7 +11252,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::mazeTimer
   timerText: {fileID: 1722536195}
-  seconds: 10
+  seconds: 120
   winScreen: {fileID: 1696850534}
   loseScreen: {fileID: 716746766}
   currentScreen: {fileID: 442781262}
@@ -12122,7 +12123,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1113537301}
+      - m_Target: {fileID: 442781262}
         m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
         m_MethodName: SetActive
         m_Mode: 6
@@ -12229,7 +12230,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Restart! '
+  m_text: 'Next
+
+'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -12256,7 +12259,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 128.9
+  m_fontSize: 141.55
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1
