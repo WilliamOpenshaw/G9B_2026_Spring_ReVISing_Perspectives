@@ -4835,9 +4835,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::mazeTimer
   timerText: {fileID: 1722536195}
   seconds: 60
-  winScreen: {fileID: 1113537301}
-  loseScreen: {fileID: 0}
-  currentScreen: {fileID: 0}
+  winScreen: {fileID: 1696850534}
+  loseScreen: {fileID: 716746766}
+  currentScreen: {fileID: 631511061}
   playerHasWon: 0
 --- !u!1 &637142814
 GameObject:
@@ -10870,7 +10870,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1642293186
 RectTransform:
   m_ObjectHideFlags: 0
@@ -11304,7 +11304,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 106.1
+  m_fontSize: 96.65
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1

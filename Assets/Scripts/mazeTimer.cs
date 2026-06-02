@@ -16,7 +16,6 @@ public class mazeTimer : MonoBehaviour
     public GameObject currentScreen;
 
     public bool playerHasWon = false;
-
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -66,7 +65,7 @@ public class mazeTimer : MonoBehaviour
     public void ResetTimer()
     {
         // Reset the timer to the initial values
-        seconds = 60;
+        seconds = 40;
         milliseconds = 0;
         playerHasWon = false;
         timerText.text = seconds.ToString("00") + ":" + milliseconds.ToString("00");
