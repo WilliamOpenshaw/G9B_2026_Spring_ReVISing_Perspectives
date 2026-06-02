@@ -30,8 +30,12 @@ public class useDoor : MonoBehaviour
                     doorpressText.enabled = false;
                     // enable next room gameobject
                     nextroom.SetActive(true);
-                    // disable this room gameobject
-                    thisroom.SetActive(false);
+
+                    if (thisroom != null)
+                    {
+                        // disable this room gameobject
+                        thisroom.SetActive(false);
+                    }
                 }
             }
     }

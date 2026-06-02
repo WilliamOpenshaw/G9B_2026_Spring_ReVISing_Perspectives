@@ -6,14 +6,13 @@ using TMPro;
 public class moneymanager : MonoBehaviour
 {
     public TMP_Text moneyText;
-    public int startMoney = -1000;
     public int currentMoney;
 
     int lastMoney;
 
     void Awake()
     {
-        currentMoney = startMoney;
+        currentMoney = 0;
         lastMoney = currentMoney;
     }
 
@@ -21,6 +20,15 @@ public class moneymanager : MonoBehaviour
 
     void Start()
     {
+        if (DifficultyManager.CurrentMode == DifficultyManager.GameMode.Baby) {
+        SetPlayerCash(75);
+        }
+        else if (DifficultyManager.CurrentMode == DifficultyManager.GameMode.Easy) {
+        SetPlayerCash(50);
+        }
+        else {
+        SetPlayerCash(0);
+        }
         if (moneyText == null)
             moneyText = GetComponent<TMP_Text>();
 
@@ -88,5 +96,14 @@ public class moneymanager : MonoBehaviour
             Debug.LogWarning("moneymanager: Cannot update money display because moneyText is missing.");
             hasWarnedNoText = true;
         }
+    }
+    public void SetPlayerCash(int amount)
+    {
+        currentMoney = amount; // Force the backend variable to the new value
+        
+        // IMPORTANT: Make sure your text UI updates immediately so the screen changes!
+        UpdateMoneyText(); 
+        
+        Debug.Log($"[MONEY RESET] Player cash manually forced to: ${amount}");
     }
 }
