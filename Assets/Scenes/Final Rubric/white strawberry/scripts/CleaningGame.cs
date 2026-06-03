@@ -89,7 +89,8 @@ public class CleaningGame : MonoBehaviour
         if (vacuumPanel != null) vacuumPanel.SetActive(false);
         if (winPanel != null) winPanel.SetActive(false);
         if (failPanel != null) failPanel.SetActive(false);
-
+        isGameActive = true; 
+        timeRemaining = 60f;
         Debug.Log("Cleaning Game has successfully restored all items, positions, and clocks for the new day!");
     }
 
