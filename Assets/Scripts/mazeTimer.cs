@@ -16,16 +16,26 @@ public class mazeTimer : MonoBehaviour
     public GameObject currentScreen;
 
     public bool playerHasWon = false;
-    
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+
         // update the timer text to show the initial time
         timerText.text = seconds.ToString("00") + ":" + milliseconds.ToString("00");
         playerHasWon = false;
 
     }
+
+    void onEnable()
+    {
+
+        // update the timer text to show the initial time
+        timerText.text = seconds.ToString("00") + ":" + milliseconds.ToString("00");
+        playerHasWon = false;
+
+    }
+
 
     // Update is called once per frame
     void FixedUpdate()
