@@ -168,15 +168,26 @@ public class CleaningGame : MonoBehaviour
     {
         if (Input.GetMouseButton(0))
         {
-            Vector2 mousePos;
-            RectTransformUtility.ScreenPointToLocalPointInRectangle(
-                tableWipePanel.GetComponent<RectTransform>(), 
-                Input.mousePosition, 
-                null, 
-                out mousePos
-            );
-            clothUI.anchoredPosition = mousePos;
+            // 1. Get the main root Canvas that holds your whole UI game view
+            Canvas masterCanvas = clothUI.GetComponentInParent<Canvas>();
+            RectTransform canvasRect = masterCanvas.GetComponent<RectTransform>();
 
+            // 2. Safely translate the mouse position directly to a point on the main canvas
+            Vector2 mousePosOnCanvas;
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(
+                canvasRect, 
+                Input.mousePosition, 
+                masterCanvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : masterCanvas.worldCamera, 
+                out mousePosOnCanvas
+            );
+
+            // 3. Find the exact world space position of that spot on the canvas
+            Vector3 worldPos = canvasRect.TransformPoint(mousePosOnCanvas);
+
+            // 4. Force the cloth to snap straight to that exact world position, bypassing its parent panel settings!
+            clothUI.transform.position = worldPos;
+
+            // 5. Keep running your dirt scrub collisions
             CheckDirtCollision();
         }
     }
@@ -272,7 +283,20 @@ public class CleaningGame : MonoBehaviour
 
     void SwitchToVacuumPhase()
     {
-        Debug.Log("Room is tidy! Time to vacuum under the sofa.");
+        Debug.Log("Room is tidy! Checking difficulty mode before vacuuming...");
+        
+        // 1. HIJACK CHECKPOINT: If the player is on EASY mode, skip Phase 3 and win immediately!
+        if (DifficultyManager.CurrentMode == DifficultyManager.GameMode.Baby) // (Easy Mode Button)
+        {
+            Debug.Log("Easy Mode detected! Bypassing vacuum stage completely.");
+            trashCollectPanel.SetActive(false);
+            
+            // Instantly skip directly to your win layout function
+            WinGame(); 
+            return; // Exit out early so the vacuum code below never touches the screen!
+        }
+
+        // 2. Otherwise (Medium or Hard Mode), proceed to vacuum as normal
         trashCollectPanel.SetActive(false);
         vacuumPanel.SetActive(true); 
     }

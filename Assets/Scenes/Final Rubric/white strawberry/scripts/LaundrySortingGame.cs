@@ -10,6 +10,7 @@ public class LaundrySortingGame : MonoBehaviour
     public GameObject winPanel;       
     public Image clothingDisplayItem;    
     public TextMeshProUGUI progressText; 
+    public GameObject goToLivingRoomButton;
 
     [Header("Game Settings")]
     public List<Color> coloredPool;       
@@ -30,28 +31,48 @@ public class LaundrySortingGame : MonoBehaviour
 
     void OnEnable()
     {
-        // REMOVED InitializeLaundryGame(); from here so it stops wiping your score!
-        
-        isGameActive = true; 
+        // 1. FORCE THE INTERNAL COUNTER BACK TO ZERO!
+        // (Make sure this variable name matches whatever integer counts your clothes, 
+        // like 'sortedClothesCount', 'score', or 'itemsSorted')
+        currentSortedCount = 0; 
 
-        if (laundryPanel != null) laundryPanel.SetActive(true);
-        if (winPanel != null) winPanel.SetActive(false); 
+        isGameActive = true; // Enables player inputs
 
-        // We still want to update the UI text and spawn a piece of clothing so the room works!
-        UpdateScoreUI();
-        SpawnNextClothing();
+        // 2. DYNAMIC DIFFICULTY ADJUSTMENT: Set how many clothes are needed to win
+        if (DifficultyManager.CurrentMode == DifficultyManager.GameMode.Baby) // Easy Mode
+        {
+            itemsToWin = 20; 
+        }
+        else if (DifficultyManager.CurrentMode == DifficultyManager.GameMode.Easy) // Medium Mode
+        {
+            itemsToWin = 30;
+        }
+        else // Hard Mode
+        {
+            itemsToWin = 50;
+        }
+
+        // Set your panels safely
+        if (laundryPanel != null) laundryPanel.SetActive(true); //
+        if (winPanel != null) winPanel.SetActive(false);        //
+
+        // 3. FORCE THE SCREEN TEXT TO SHOW THE 0 IMMEDIATELY!
+        UpdateScoreUI();     // Refreshes text display with new targets
+        SpawnNextClothing(); // Spawns first clothing item
         
-        Debug.Log($"[LAUNDRY] Returned to room! Continuing progress from: {currentSortedCount} items.");
+        Debug.Log($"Laundry Game Woke Up! Counter forced to: {currentSortedCount} / {itemsToWin}");
     }
     public void InitializeLaundryGame()
     {
         currentSortedCount = 0;
         UpdateScoreUI();
+
     }
 
     public void StartSortingGame()
     {
         laundryPanel.SetActive(true);
+        currentSortedCount = 0; 
         isGameActive = true;
         UpdateScoreUI();
         SpawnNextClothing();
@@ -63,8 +84,26 @@ public class LaundrySortingGame : MonoBehaviour
         laundryPanel.SetActive(false);
     }
 
+
+
+    
+
     void Update()
     {
+        // --- BABY CRYING SAFETY LOCK ---
+        if (goToLivingRoomButton != null && gameManager != null)
+        {
+            // Read the true/false crying value from your master manager
+            bool cryingState = gameManager.isBabyCrying; 
+
+            // Turn the ENTIRE button GameObject active when crying, and inactive when quiet!
+            if (goToLivingRoomButton.activeSelf != cryingState)
+            {
+                goToLivingRoomButton.SetActive(cryingState);
+            }
+        }
+        // -------------------------------
+
         if (!isGameActive) return;
 
         // A KEY: Must be White
