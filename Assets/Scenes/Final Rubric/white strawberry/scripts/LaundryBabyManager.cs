@@ -274,6 +274,7 @@ public class LaundryBabyManager : MonoBehaviour
         cryEventTimer = Random.Range(minTimeBetweenCries, maxTimeBetweenCries);
     }
 
+    
     public void CompleteMazeToNursery() { GoToNurseryRoom(); }
     public void CompleteMazeToLaundry() { GoToLaundryRoom(); }
 }

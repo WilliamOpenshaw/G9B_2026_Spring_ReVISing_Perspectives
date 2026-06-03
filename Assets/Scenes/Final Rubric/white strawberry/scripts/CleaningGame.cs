@@ -168,15 +168,26 @@ public class CleaningGame : MonoBehaviour
     {
         if (Input.GetMouseButton(0))
         {
-            Vector2 mousePos;
-            RectTransformUtility.ScreenPointToLocalPointInRectangle(
-                tableWipePanel.GetComponent<RectTransform>(), 
-                Input.mousePosition, 
-                null, 
-                out mousePos
-            );
-            clothUI.anchoredPosition = mousePos;
+            // 1. Get the main root Canvas that holds your whole UI game view
+            Canvas masterCanvas = clothUI.GetComponentInParent<Canvas>();
+            RectTransform canvasRect = masterCanvas.GetComponent<RectTransform>();
 
+            // 2. Safely translate the mouse position directly to a point on the main canvas
+            Vector2 mousePosOnCanvas;
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(
+                canvasRect, 
+                Input.mousePosition, 
+                masterCanvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : masterCanvas.worldCamera, 
+                out mousePosOnCanvas
+            );
+
+            // 3. Find the exact world space position of that spot on the canvas
+            Vector3 worldPos = canvasRect.TransformPoint(mousePosOnCanvas);
+
+            // 4. Force the cloth to snap straight to that exact world position, bypassing its parent panel settings!
+            clothUI.transform.position = worldPos;
+
+            // 5. Keep running your dirt scrub collisions
             CheckDirtCollision();
         }
     }

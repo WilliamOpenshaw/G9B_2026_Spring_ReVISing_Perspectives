@@ -34,7 +34,7 @@ public class CookingGame : MonoBehaviour
     public GameObject continueButton;           
 
     [Header("Global Timer Settings")]
-    public float totalGameTime = 40f;      
+    public float totalGameTime = 60f;      
     private float currentTimer;
     private bool isGameActive = true;
     private bool isCookingPhaseActive = false;
