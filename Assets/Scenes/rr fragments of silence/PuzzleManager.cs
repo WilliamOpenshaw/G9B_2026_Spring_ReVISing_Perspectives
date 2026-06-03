@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI; // Required for Image components
 using System.Collections;
 
 public class PuzzleManager : MonoBehaviour
@@ -37,16 +38,16 @@ public class PuzzleManager : MonoBehaviour
         // Rich golden color glow
         Color goldGlow = new Color(1f, 0.82f, 0.15f, 0.75f); 
 
-        // Light up ONLY the guideline backdrops as vector golden shapes
+        // Light up ONLY the guideline backdrops as UI Image shapes
         foreach (PuzzlePiece piece in puzzlePieces)
         {
             if (piece != null)
             {
-                SpriteRenderer guidelineRen = piece.GetGuidelineRenderer();
+                Image guidelineRen = piece.GetGuidelineRenderer(); // Swapped to Image
                 if (guidelineRen != null)
                 {
-                    guidelineRen.enabled = true; // Turn layout mesh back on
-                    guidelineRen.color = goldGlow; // Tint flat silhouette into gold over edges
+                    guidelineRen.enabled = true; 
+                    guidelineRen.color = goldGlow; 
                 }
             }
         }

@@ -1,94 +1,101 @@
 using UnityEngine;
+using UnityEngine.UI; // Required for Image components
+using UnityEngine.EventSystems; // Required for UI Drag & Drop interfaces
 
-public class PuzzlePiece : MonoBehaviour
+public class PuzzlePiece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     [Header("Target Alignment")]
-    [SerializeField] private Transform guidelineTarget; 
+    [SerializeField] private RectTransform guidelineTarget; // Swapped to RectTransform
     [SerializeField] private float snapThreshold = 40f; 
 
-    private Vector3 offset;
     private bool isSnapped = false;
-    private Camera mainCamera;
-    private SpriteRenderer spriteRenderer;
-    private SpriteRenderer targetRenderer;
-    private int originalSortingOrder;
+    private Image imageComponent; // Swapped from SpriteRenderer
+    private Image targetImageComponent; // Swapped from SpriteRenderer
+    private int originalSiblingIndex; // Used instead of sortingOrder for UI layers
+    
+    private RectTransform rectTransform;
+    private Canvas canvas;
 
     public bool IsSnapped() => isSnapped;
     
-    // PUBLIC ACCESS METHOD: Clears out error CS1061 by giving PuzzleManager full access!
-    public SpriteRenderer GetGuidelineRenderer() => targetRenderer;
+    // Public access method matching your manager's needs
+    public Image GetGuidelineRenderer() => targetImageComponent;
 
     void Awake()
     {
-        mainCamera = Camera.main;
-        if (mainCamera == null) mainCamera = FindFirstObjectByType<Camera>();
-
-        spriteRenderer = GetComponent<SpriteRenderer>();
-        if (spriteRenderer != null) originalSortingOrder = spriteRenderer.sortingOrder;
+        rectTransform = GetComponent<RectTransform>();
+        canvas = GetComponentInParent<Canvas>();
+        imageComponent = GetComponent<Image>();
+        
+        if (imageComponent != null) originalSiblingIndex = transform.GetSiblingIndex();
 
         if (guidelineTarget != null)
         {
-            targetRenderer = guidelineTarget.GetComponent<SpriteRenderer>();
-            if (targetRenderer != null)
+            targetImageComponent = guidelineTarget.GetComponent<Image>();
+            if (targetImageComponent != null)
             {
-                // FORCE THE TARGET INTO A SOLID SEE-THROUGH WHITE SILHOUETTE
-                // Changing the material to an unlit GUI type eliminates artwork details/paper textures
-                targetRenderer.material = new Material(Shader.Find("UI/Default"));
-                targetRenderer.color = new Color(1f, 1f, 1f, 0.2f); // 20% alpha see-through template
+                // UI Images use UI/Default by default, setting up the silhouette template
+                targetImageComponent.material = new Material(Shader.Find("UI/Default"));
+                targetImageComponent.color = new Color(1f, 1f, 1f, 0.2f); // 20% alpha template
             }
         }
     }
 
-    void OnMouseDown()
+    // Triggers when the user first clicks/touches the UI piece
+    public void OnBeginDrag(PointerEventData eventData)
     {
-        if (isSnapped || mainCamera == null) return;
-        Vector3 mousePos = mainCamera.ScreenToWorldPoint(Input.mousePosition);
-        offset = transform.position - new Vector3(mousePos.x, mousePos.y, transform.position.z);
-        if (spriteRenderer != null) spriteRenderer.sortingOrder = 100;
+        if (isSnapped) return;
+        
+        // Brings this UI element to the front of its UI layer hierarchy
+        transform.SetAsLastSibling();
     }
 
-    void OnMouseDrag()
+    // Triggers continuously while dragging the UI piece
+    public void OnDrag(PointerEventData eventData)
     {
-        if (isSnapped || mainCamera == null) return;
+        if (isSnapped || canvas == null) return;
 
-        Vector3 mousePos = mainCamera.ScreenToWorldPoint(Input.mousePosition);
-        transform.position = new Vector3(mousePos.x, mousePos.y, transform.position.z) + offset;
+        // Moves the piece smoothly by adjusting for canvas scaling automatically
+        rectTransform.anchoredPosition += eventData.delta / canvas.scaleFactor;
 
-        if (guidelineTarget != null && targetRenderer != null)
+        if (guidelineTarget != null && targetImageComponent != null)
         {
-            float distance = Vector2.Distance(transform.position, guidelineTarget.position);
+            float distance = Vector2.Distance(rectTransform.anchoredPosition, guidelineTarget.anchoredPosition);
             if (distance <= snapThreshold)
             {
-                targetRenderer.color = new Color(1f, 1f, 1f, 0.5f); // Brightens up nicely as you hover over it
+                targetImageComponent.color = new Color(1f, 1f, 1f, 0.5f); // Brighten on hover
             }
             else
             {
-                targetRenderer.color = new Color(1f, 1f, 1f, 0.2f); // Back to light hint
+                targetImageComponent.color = new Color(1f, 1f, 1f, 0.2f); // Dim back down
             }
         }
     }
 
-    void OnMouseUp()
+    // Triggers when the user releases the UI piece
+    public void OnEndDrag(PointerEventData eventData)
     {
-        if (isSnapped || guidelineTarget == null || mainCamera == null) return;
-        if (spriteRenderer != null) spriteRenderer.sortingOrder = originalSortingOrder;
+        if (isSnapped || guidelineTarget == null) return;
+        
+        // Restore its original depth sorting order inside the UI hierarchy
+        transform.SetSiblingIndex(originalSiblingIndex);
 
-        float distance = Vector2.Distance(transform.position, guidelineTarget.position);
+        float distance = Vector2.Distance(rectTransform.anchoredPosition, guidelineTarget.anchoredPosition);
 
         if (distance <= snapThreshold)
         {
-            transform.position = guidelineTarget.position;
-            transform.rotation = guidelineTarget.rotation;
+            // Snap perfectly to the target's position and rotation
+            rectTransform.anchoredPosition = guidelineTarget.anchoredPosition;
+            rectTransform.localRotation = guidelineTarget.localRotation;
             isSnapped = true;
 
-            // Turn off the guideline temporary so it doesn't overlap the neat paper art
-            if (targetRenderer != null) targetRenderer.enabled = false;
+            if (targetImageComponent != null) targetImageComponent.enabled = false;
 
             FindFirstObjectByType<PuzzleManager>()?.CheckPuzzleCompletion();
         }
         else
         {
-            if (targetRenderer != null) targetRenderer.color = new Color(1f, 1f, 1f, 0.2f);
+            if (targetImageComponent != null) targetImageComponent.color = new Color(1f, 1f, 1f, 0.2f);
         }
     }
 }
