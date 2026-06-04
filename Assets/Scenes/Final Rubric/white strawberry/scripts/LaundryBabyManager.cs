@@ -36,6 +36,7 @@ public class LaundryBabyManager : MonoBehaviour
     public GameObject winPanel;
     public GameObject losePanel;
     public TextMeshProUGUI gameTimerText;
+    public UnityEngine.UI.Image laundryTimerFillCircle;
 
     [Header("Game Timer Settings")]
     public float gameTimeLimit = 90f; // 1 min 30 seconds
@@ -67,10 +68,14 @@ public class LaundryBabyManager : MonoBehaviour
         if (losePanel != null) losePanel.SetActive(false);
         if (babyCryCueUI != null) babyCryCueUI.SetActive(false);
 
+        if (gameTimerText != null) gameTimerText.gameObject.SetActive(true);
+        if (laundryTimerFillCircle != null) laundryTimerFillCircle.gameObject.SetActive(true);
+
         GoToLaundryRoom();
         ResetCryTimer();
     }
 
+    
     void Update()
     {
         if (isGameOver) return;
@@ -81,14 +86,19 @@ public class LaundryBabyManager : MonoBehaviour
         {
             int minutes = Mathf.FloorToInt(gameTimer / 60);
             int seconds = Mathf.FloorToInt(gameTimer % 60);
-            gameTimerText.text = $"Time Left: <color=red>{minutes}:{seconds:D2}</color>";
+            gameTimerText.text = $"<color=red>{minutes}:{seconds:D2}</color>";
+        }
+
+        // ⚪ NEW: Smoothly un-fill the circle along with the 90-second limit!
+        if (laundryTimerFillCircle != null)
+        {
+            laundryTimerFillCircle.fillAmount = gameTimer / gameTimeLimit;
         }
 
         // Check if time ran out (player loses!)
         if (gameTimer <= 0)
         {
             playerWon = false;
-            
             TriggerGameEnd();
             return;
         }
@@ -246,8 +256,12 @@ public class LaundryBabyManager : MonoBehaviour
 
     void TriggerGameEnd()
     {
+        // 🔴 TURN THEM OFF FIRST - completely safe and unskippable!
+        if (gameTimerText != null) gameTimerText.gameObject.SetActive(false);
+        if (laundryTimerFillCircle != null) laundryTimerFillCircle.gameObject.SetActive(false);
+
         isGameOver = true;
-        Time.timeScale = 0f; // Freeze the game
+        Time.timeScale = 0f; // Freeze the engine
 
         // Hide all room panels
         laundryPanel.SetActive(false);
@@ -260,12 +274,10 @@ public class LaundryBabyManager : MonoBehaviour
         if (playerWon)
         {
             winPanel.SetActive(true);
-            Debug.Log("PLAYER WON!");
         }
         else
         {
             if (losePanel != null) losePanel.SetActive(true);
-            Debug.LogError("PLAYER LOST!");
         }
     }
 

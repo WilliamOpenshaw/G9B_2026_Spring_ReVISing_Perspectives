@@ -14,6 +14,8 @@ public class CleaningGame : MonoBehaviour
 
     [Header("Global Timer")]
     public TextMeshProUGUI timerText;
+    public Image squareTimerFill; // 🟪 NEW: Drag your square timer image here!
+
     [Header("Timer Settings")]
     public float timeRemaining = 60f; // 60 seconds to clean the whole room!
     public bool isGameActive = true;  // Keeps track of whether the game is running
@@ -72,6 +74,23 @@ public class CleaningGame : MonoBehaviour
         ResetAndPositionItems(trashItems, false);
         ResetAndPositionItems(dustBunnies, false);
 
+        foreach (GameObject dirt in dirtSpots)
+        {
+            if (dirt != null)
+            {
+                dirt.SetActive(true); // Make sure the object is awake
+
+                // Force the image component to stay turned ON and visible
+                var dirtImage = dirt.GetComponent<UnityEngine.UI.Image>();
+                if (dirtImage != null)
+                {
+                    dirtImage.enabled = true; 
+                    // Reset alpha/color back to full visibility just in case it got faded out
+                    dirtImage.color = new Color(dirtImage.color.r, dirtImage.color.g, dirtImage.color.b, 1f);
+                }
+            }
+        }
+
         // 4. Snap cleaning tools back to their starting spots
         if (clothUI != null) clothUI.anchoredPosition = presetClothPos;
         if (vacuumUI != null) vacuumUI.anchoredPosition = presetVacuumPos;
@@ -89,6 +108,11 @@ public class CleaningGame : MonoBehaviour
         if (vacuumPanel != null) vacuumPanel.SetActive(false);
         if (winPanel != null) winPanel.SetActive(false);
         if (failPanel != null) failPanel.SetActive(false);
+
+        // ⏱️ WAKE UP THE CLOCK GRAPHICS!
+        if (timerText != null) timerText.gameObject.SetActive(true);
+        if (squareTimerFill != null) squareTimerFill.gameObject.SetActive(true);
+
         isGameActive = true; 
         timeRemaining = 60f;
         Debug.Log("Cleaning Game has successfully restored all items, positions, and clocks for the new day!");
@@ -154,7 +178,13 @@ public class CleaningGame : MonoBehaviour
         
         int minutes = Mathf.FloorToInt(timeRemaining / 60);
         int seconds = Mathf.FloorToInt(timeRemaining % 60);
-        timerText.text = $"Time Left:   <color=red>{minutes}:{seconds:D2}</color>";
+        timerText.text = $"<color=red>{minutes}:{seconds:D2}</color>";
+
+        // 🟪 NEW: Make the square smoothly un-fill as the seconds tick down!
+        if (squareTimerFill != null)
+        {
+            squareTimerFill.fillAmount = timeRemaining / 60f;
+        }
 
         if (timeRemaining <= 0)
         {
@@ -333,6 +363,9 @@ public class CleaningGame : MonoBehaviour
     {
         isGameActive = false; 
         vacuumPanel.SetActive(false);
+
+        if (timerText != null) timerText.gameObject.SetActive(false);
+        if (squareTimerFill != null) squareTimerFill.gameObject.SetActive(false);
         
         if (winPanel != null)
         {
@@ -348,6 +381,9 @@ public class CleaningGame : MonoBehaviour
         tableWipePanel.SetActive(false);
         trashCollectPanel.SetActive(false);
         vacuumPanel.SetActive(false);
+
+        if (timerText != null) timerText.gameObject.SetActive(false);
+        if (squareTimerFill != null) squareTimerFill.gameObject.SetActive(false);
 
         if (failPanel != null)
         {

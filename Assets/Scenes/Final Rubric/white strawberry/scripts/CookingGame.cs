@@ -29,6 +29,7 @@ public class CookingGame : MonoBehaviour
     [Header("UI Elements")]
     public TextMeshProUGUI recipeListText;
     public TextMeshProUGUI popupText;      
+    public Image cookingTimerFillCircle; // 🔴 NEW: Drag your Cooking Timer UI Image here!
     public TextMeshProUGUI timerText;      
     public Slider cookingSlider;
     public GameObject continueButton;           
@@ -88,6 +89,9 @@ public class CookingGame : MonoBehaviour
         if (ingredientPanel != null) ingredientPanel.SetActive(true);
         if (stovePanel != null) stovePanel.SetActive(false);
 
+        if (timerText != null) timerText.gameObject.SetActive(true);
+        if (cookingTimerFillCircle != null) cookingTimerFillCircle.gameObject.SetActive(true);
+
         UpdateRecipeListUI();
         Debug.Log($"Kitchen loaded on {DifficultyManager.CurrentMode}! Dishes needed: {totalDishesToWin}, Speed: {sliderSpeed}");
     }
@@ -123,7 +127,7 @@ public class CookingGame : MonoBehaviour
         // 1. EMERGENCY SAFETY GATES: Stop counting if time is already up or game is inactive
         if (currentTimer <= 0 || !isGameActive) 
         {
-            timerText.text = "Time Left: <color=red>0:00</color>";
+            timerText.text = "<color=red>0:00</color>";
             return; 
         }
 
@@ -137,7 +141,13 @@ public class CookingGame : MonoBehaviour
         int seconds = Mathf.FloorToInt(currentTimer % 60);
         
         // 4. Update the text UI safely
-        timerText.text = $"Time Left: <color=red>{minutes}:{seconds:D2}</color>";
+        timerText.text = $"<color=red>{minutes}:{seconds:D2}</color>";
+
+        // 🔴 NEW: Make the circle drain smoothly!
+        if (cookingTimerFillCircle != null)
+        {
+            cookingTimerFillCircle.fillAmount = currentTimer / totalGameTime;
+        }
 
         // 5. Trigger Game Over cleanly at exactly 0
         if (currentTimer <= 0)
@@ -284,11 +294,17 @@ public class CookingGame : MonoBehaviour
         ingredientPanel.SetActive(false);
         stovePanel.SetActive(false);
 
+        if (timerText != null) timerText.gameObject.SetActive(false);
+        if (cookingTimerFillCircle != null) cookingTimerFillCircle.gameObject.SetActive(false);
+
         if (success) 
-    {
+        {
         winPanel.SetActive(true);
         popupPanel.SetActive(false); 
         if (continueButton != null) continueButton.SetActive(false); 
+        
+        if (timerText != null) timerText.gameObject.SetActive(false);
+        if (cookingTimerFillCircle != null) cookingTimerFillCircle.gameObject.SetActive(false);
 
         // EMERGENCY HEALTH ROUTER
         healthbar playerHealth = FindFirstObjectByType<healthbar>(FindObjectsInactive.Include);
@@ -353,6 +369,9 @@ public class CookingGame : MonoBehaviour
         popupPanel.SetActive(false);
         winPanel.SetActive(false);
         if (continueButton != null) continueButton.SetActive(false);
+
+        if (timerText != null) timerText.gameObject.SetActive(true);
+        if (cookingTimerFillCircle != null) cookingTimerFillCircle.gameObject.SetActive(true);
 
         UpdateRecipeListUI();
 

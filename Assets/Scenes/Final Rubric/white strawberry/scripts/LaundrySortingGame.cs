@@ -111,13 +111,13 @@ public class LaundrySortingGame : MonoBehaviour
         {
             CheckPlayerChoice("White");
         }
-        // R KEY: Must be Red
-        else if (Input.GetKeyDown(KeyCode.R))
+        // F KEY: Middle Washing Machine (Red)
+        else if (Input.GetKeyDown(KeyCode.F))
         {
             CheckPlayerChoice("Red");
         }
-        // D KEY: Must be Blue
-        else if (Input.GetKeyDown(KeyCode.D))
+        // J KEY: Right Washing Machine (Blue)
+        else if (Input.GetKeyDown(KeyCode.J))
         {
             CheckPlayerChoice("Blue");
         }
