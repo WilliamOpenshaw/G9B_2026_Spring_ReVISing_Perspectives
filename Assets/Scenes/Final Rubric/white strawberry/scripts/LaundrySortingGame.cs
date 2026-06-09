@@ -11,6 +11,8 @@ public class LaundrySortingGame : MonoBehaviour
     public Image clothingDisplayItem;    
     public TextMeshProUGUI progressText; 
     public GameObject goToLivingRoomButton;
+    public TextMeshProUGUI gameTimerText;
+    public UnityEngine.UI.Image laundryTimerFillCircle;
 
     [Header("Game Settings")]
     public List<Color> coloredPool;       
@@ -206,7 +208,12 @@ public class LaundrySortingGame : MonoBehaviour
         laundryPanel.SetActive(false);
         Debug.Log("50 clothes sorted perfectly with zero exploits!");
         winPanel.SetActive(true);
-
+        
+        // CRITICAL: Tell the baby manager that we won so it can hide the timer!
+        if (gameManager != null)
+        {
+            gameManager.CompleteLaundryItem();
+        }
     }
 
     // ==========================================
