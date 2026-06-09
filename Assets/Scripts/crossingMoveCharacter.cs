@@ -12,23 +12,23 @@ public class crossingMoveCharacter : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //if press w then this gameobjects 2d rigidbody gets moved up
-        if (Input.GetKey(KeyCode.W))
+        //if press w or up arrow then this gameobjects 2d rigidbody gets moved up
+        if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))
         {
             GetComponent<Rigidbody2D>().linearVelocity = new Vector2(0, speed);
         }
-         //if press s then this gameobjects 2d rigidbody gets moved down
-        else if (Input.GetKey(KeyCode.S))
+         //if press s or down arrow then this gameobjects 2d rigidbody gets moved down
+        else if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))
         {
             GetComponent<Rigidbody2D>().linearVelocity = new Vector2(0, -speed);
         }
-         //if press a then this gameobjects 2d rigidbody gets moved left
-        else if (Input.GetKey(KeyCode.A))
+         //if press a or left arrow then this gameobjects 2d rigidbody gets moved left
+        else if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
         {
             GetComponent<Rigidbody2D>().linearVelocity = new Vector2(-speed, 0);
         }
-         //if press d then this gameobjects 2d rigidbody gets moved right
-        else if (Input.GetKey(KeyCode.D))
+         //if press d or right arrow then this gameobjects 2d rigidbody gets moved right
+        else if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
         {
             GetComponent<Rigidbody2D>().linearVelocity = new Vector2(speed, 0);
         }
