@@ -11,11 +11,9 @@ public class healthbar : MonoBehaviour
 
     void Start()
     {
-        // Force the layout setup cleanly on startup
         ApplyDifficultyHealth();
     }
 
-    // Moving this to its own function so we can reuse it on Day Resets!
     private void ApplyDifficultyHealth()
     {
         if (DifficultyManager.CurrentMode == DifficultyManager.GameMode.Baby) {

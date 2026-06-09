@@ -176,4 +176,20 @@ public class DayLoopManager : MonoBehaviour
             UnityEngine.SceneManagement.SceneManager.GetActiveScene().name
         );
     }
+
+
+    public void ResetGameToDayOne()
+    {
+        // 1. Unfreeze Unity just in case an old fail panel paused the game
+        Time.timeScale = 1f;
+
+        // 2. Force the day system back to the absolute beginning
+        // (Change 'currentDay' to whatever your script uses, like 'dayCount')
+        currentDay = 1; 
+
+        // 3. Clear out any game-over or final day flags
+        // isGameOver = false; 
+
+        Debug.Log("DayLoopManager: Successfully reset calendar back to Day 1!");
+    }
 }
