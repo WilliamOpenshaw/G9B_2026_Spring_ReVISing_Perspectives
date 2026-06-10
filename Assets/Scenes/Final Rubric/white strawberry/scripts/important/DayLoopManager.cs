@@ -6,6 +6,8 @@ public class DayLoopManager : MonoBehaviour
     [Header("Core Calendar Stats")]
     public int currentDay = 1;
     public int targetDebtGoal = 250;
+    public GameObject healthbar;
+    public GameObject moneybar;
 
     [Header("Day Panel Objects")]
     public GameObject day1GameplayParent; // Drag your Day 1 stuff here
@@ -108,19 +110,25 @@ public class DayLoopManager : MonoBehaviour
         if (currentDay == 2)
         {
             if (day1GameplayParent != null) day1GameplayParent.SetActive(false); 
-            if (day2GameplayParent != null) day2GameplayParent.SetActive(true);  
+            if (day2GameplayParent != null) day2GameplayParent.SetActive(true);
+            healthbar.SetActive(true);
+            moneybar.SetActive(true);  
             Debug.Log("Welcome to Day 2!");
         }
         else if (currentDay == 3)
         {
             if (day2GameplayParent != null) day2GameplayParent.SetActive(false); 
             if (day3GameplayParent != null) day3GameplayParent.SetActive(true);  
+            healthbar.SetActive(true);
+            moneybar.SetActive(true);  
             Debug.Log("Welcome to Day 3!");
         }
         else if (currentDay > 3)
         {
             Time.timeScale = 0f; // Freeze updates
             if (day3GameplayParent != null) day3GameplayParent.SetActive(false); 
+            healthbar.SetActive(false);
+            moneybar.SetActive(false);
 
             // NEW: Forcefully hide the HUD elements for ALL endings right here!
             if (branchManagerScript != null)
