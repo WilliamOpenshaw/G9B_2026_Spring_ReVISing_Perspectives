@@ -4,7 +4,7 @@ using TMPro;
 
 public class FOStimer : MonoBehaviour
 {
-    public float timeRemaining = 60;
+    public float timeRemaining = 100; // Changed to 100 seconds
     public bool timerIsRunning = false; 
     public TextMeshProUGUI timeText;
 
@@ -62,5 +62,14 @@ public class FOStimer : MonoBehaviour
     {
         timerIsRunning = false;
         isTimerActivated = false;
+    }
+
+    // NEW LOOPING FUNCTION ADDED BELOW:
+    public void ResetTimer()
+    {
+        timeRemaining = 100f; // Resets clock back to your full 100 seconds
+        timerIsRunning = false; 
+        isTimerActivated = false;
+        DisplayTime(timeRemaining);
     }
 }

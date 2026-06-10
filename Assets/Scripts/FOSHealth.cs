@@ -72,4 +72,15 @@ public class FOSHealth : MonoBehaviour
             if (loseScreen != null) loseScreen.SetActive(true);
         }
     }
+
+    // NEW LOOPING FUNCTION ADDED BELOW:
+    public void ResetHearts()
+    {
+        numberOfHearts = 3; // Resets your score tracking counter
+        
+        // Instantly reactivates all your heart UI elements
+        if (heart1 != null) heart1.SetActive(true);
+        if (heart2 != null) heart2.SetActive(true);
+        if (heart3 != null) heart3.SetActive(true);
+    }
 }
