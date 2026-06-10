@@ -84,8 +84,26 @@ public class LaundrySortingGame : MonoBehaviour
         laundryPanel.SetActive(false);
     }
 
+
+
+    
+
     void Update()
     {
+        // --- BABY CRYING SAFETY LOCK ---
+        if (goToLivingRoomButton != null && gameManager != null)
+        {
+            // Read the true/false crying value from your master manager
+            bool cryingState = gameManager.isBabyCrying; 
+
+            // Turn the ENTIRE button GameObject active when crying, and inactive when quiet!
+            if (goToLivingRoomButton.activeSelf != cryingState)
+            {
+                goToLivingRoomButton.SetActive(cryingState);
+            }
+        }
+        // -------------------------------
+
         if (!isGameActive) return;
 
         // A KEY: Must be White
@@ -93,13 +111,13 @@ public class LaundrySortingGame : MonoBehaviour
         {
             CheckPlayerChoice("White");
         }
-        // R KEY: Must be Red
-        else if (Input.GetKeyDown(KeyCode.R))
+        // F KEY: Middle Washing Machine (Red)
+        else if (Input.GetKeyDown(KeyCode.F))
         {
             CheckPlayerChoice("Red");
         }
-        // D KEY: Must be Blue
-        else if (Input.GetKeyDown(KeyCode.D))
+        // J KEY: Right Washing Machine (Blue)
+        else if (Input.GetKeyDown(KeyCode.J))
         {
             CheckPlayerChoice("Blue");
         }

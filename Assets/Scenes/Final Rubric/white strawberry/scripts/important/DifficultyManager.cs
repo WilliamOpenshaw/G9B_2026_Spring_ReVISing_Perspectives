@@ -2,8 +2,18 @@ using UnityEngine;
 
 public class DifficultyManager : MonoBehaviour
 {
-    public enum GameMode { Baby, Easy, Hard }
+    // Enum list stays perfect
+    public enum GameMode { Baby, Easy, Hard, Impossible }
     public static GameMode CurrentMode = GameMode.Hard; // Defaults to Hard
+
+    // --- NEW SECRET BUTTON FUNCTION ---
+    public void SetDifficultyImpossible()
+    {
+        CurrentMode = GameMode.Impossible;
+        Debug.Log("⚠️ SECRET IMPOSSIBLE MODE ACTIVATED VIA EASTER EGG! 💀");
+        StartTheGame();
+    }
+    // ----------------------------------
 
     public void SetDifficultyBaby() // (Easy Mode Button)
     {
@@ -28,6 +38,6 @@ public class DifficultyManager : MonoBehaviour
 
     private void StartTheGame()
     {
-        // Put whatever you use to clear the menu or load Day 1 here!
+        // Your scene loader or game-start code here!
     }
 }
