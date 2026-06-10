@@ -8812,10 +8812,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1427375250}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.06540283, y: 0.33116537}
+  m_AnchorMin: {x: 0.06540283, y: 0.401252}
   m_AnchorMax: {x: 0.957, y: 0.9274174}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0.000015258789}
+  m_SizeDelta: {x: 0, y: -0.00001001358}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &232854474
 MonoBehaviour:
@@ -8904,7 +8904,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: 0, y: 0, z: 0, w: -6.482147}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -17216,7 +17216,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'next page '
+  m_text: 'Next Page '
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -25748,7 +25748,7 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 378846027}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.037272908, y: 0.343252}
+  m_AnchorMin: {x: 0.07463646, y: 0.34566933}
   m_AnchorMax: {x: 0.9226365, y: 0.9274174}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
@@ -25773,8 +25773,12 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Team name:  \nMembers: Jamie, Kajsa, Zoe, and Rubie\nG9B ReV.I.S.ing Perspectives
-    PBL"
+  m_text: 'Team name: White Strawberries
+
+    Members: Jamie, Kajsa, Zoe, and Rubie
+
+    G9B
+    ReV.I.S.ing Perspectives PBL'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -25801,7 +25805,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 87.05
+  m_fontSize: 83.2
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -25840,7 +25844,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: -47.27423, y: 0, z: 124.58441, w: 5.488922}
+  m_margin: {x: -47.27423, y: 0, z: 131.7279, w: 5.488922}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -35294,8 +35298,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4284157696
+  m_fontColor: {r: 0, g: 0.059067257, b: 0.3584906, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -69412,6 +69416,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DayLoopManager
   currentDay: 1
   targetDebtGoal: 250
+  healthbar: {fileID: 2071742420}
+  moneybar: {fileID: 872207552}
   day1GameplayParent: {fileID: 705988167}
   day2GameplayParent: {fileID: 827225946}
   day3GameplayParent: {fileID: 1345417357}
