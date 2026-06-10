@@ -1,11 +1,10 @@
 fileFormatVersion: 2
-guid: c7066cbf7a1a81241b50d4b2fd6f6847
+guid: fbcfe7561c9f6e747ac1396eaaf5c343
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -1208114974405106438
-    second: "\u53F0\u7063\u54C1\u724C LED\u71C8\u6CE1 3W 5W 10W 13W 16W 20W 25W E27
-      \u71C8\u6CE1 \u7403\u6CE1\u71C8 \u96FB\u71C8\u6CE1_0"
+      213: 5572958577240397430
+    second: resistence fail_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -114,14 +113,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: "\u53F0\u7063\u54C1\u724C LED\u71C8\u6CE1 3W 5W 10W 13W 16W 20W 25W E27
-        \u71C8\u6CE1 \u7403\u6CE1\u71C8 \u96FB\u71C8\u6CE1_0"
+      name: resistence fail_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 736
-        height: 736
+        width: 2670
+        height: 1454
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -130,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: af4e0c6e4d9eb3fe0800000000000000
-      internalID: -1208114974405106438
+      spriteID: 67651689c40275d40800000000000000
+      internalID: 5572958577240397430
       vertices: []
       indices: 
       edges: []
@@ -150,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      "\u53F0\u7063\u54C1\u724C LED\u71C8\u6CE1 3W 5W 10W 13W 16W 20W 25W E27 \u71C8\u6CE1 \u7403\u6CE1\u71C8 \u96FB\u71C8\u6CE1_0": -1208114974405106438
+      resistence fail_0: 5572958577240397430
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
