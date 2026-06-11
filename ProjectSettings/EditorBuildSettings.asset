@@ -6,8 +6,8 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/Final Rubric/white strawberry/white strawberries  0.0.3.unity
-    guid: da39ac8a438b44eed9922e3cbcb405bc
+    path: Assets/Scenes/Final Rubric/white strawberry/white strawberries  0.0.6.unity
+    guid: 66bc521f7d4d545e79456eb08c621c97
   m_configObjects:
     com.unity.dt.app-ui: {fileID: 11400000, guid: 1b1c20d82303e4b5781c3ef50ac1449f, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
