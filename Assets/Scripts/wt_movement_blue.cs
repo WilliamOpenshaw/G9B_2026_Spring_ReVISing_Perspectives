@@ -8,7 +8,7 @@ public class wt_movement_blue : MonoBehaviour
     public GameObject downImage;
     public GameObject leftImage;
     public GameObject rightImage;
-    public float speed = 0.2f;
+    public float speed = 1000f;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -16,39 +16,41 @@ public class wt_movement_blue : MonoBehaviour
         downImage.SetActive(false);
         leftImage.SetActive(false);
         rightImage.SetActive(false);
+        speed = 1000f;
     }
 
     // Update is called once per frame
     void Update()
     {
-        // move character ui image up with rect transform anchor in canvas when w key is pressed
+        // move rigidbody of character when w key is pressed
         if (Input.GetKey(KeyCode.W))
         {
-            GetComponent<RectTransform>().anchoredPosition += new Vector2(0, speed);
+            GetComponent<Rigidbody2D>().linearVelocity = new Vector2(0, speed);
             upImage.SetActive(true);
             downImage.SetActive(false);
             leftImage.SetActive(false);
             rightImage.SetActive(false);
         }
-        // move character ui imnage down with rect transform anchor in canvas when s key is pressed
-        if (Input.GetKey(KeyCode.S))        {
-            GetComponent<RectTransform>().anchoredPosition += new Vector2(0, -speed);
+        // move rigidbody of character down when s key is pressed
+        if (Input.GetKey(KeyCode.S))
+        {
+            GetComponent<Rigidbody2D>().linearVelocity = new Vector2(0, -speed);
             upImage.SetActive(false);
             downImage.SetActive(true);
             leftImage.SetActive(false);
             rightImage.SetActive(false);
         }
-         // move character ui image left with rect transform anchor in canvas when a key is pressed
+         // move rigidbody of character left when a key is pressed
         if (Input.GetKey(KeyCode.A))        {
-            GetComponent<RectTransform>().anchoredPosition += new Vector2(-speed, 0);
+            GetComponent<Rigidbody2D>().linearVelocity = new Vector2(-speed, 0);
             upImage.SetActive(false);
             downImage.SetActive(false);
             leftImage.SetActive(true);
             rightImage.SetActive(false);
         }
-         // move character ui image right with rect transform anchor in canvas when d key is pressed
+         // move rigidbody of character right when d key is pressed
         if (Input.GetKey(KeyCode.D))        {
-            GetComponent<RectTransform>().anchoredPosition += new Vector2(speed, 0);
+            GetComponent<Rigidbody2D>().linearVelocity = new Vector2(speed, 0);
             upImage.SetActive(false);
             downImage.SetActive(false);
             leftImage.SetActive(false);
