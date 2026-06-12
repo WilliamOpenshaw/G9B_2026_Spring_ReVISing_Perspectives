@@ -61,6 +61,8 @@ public class CookingGame : MonoBehaviour
 
         if (popupPanel != null) popupPanel.SetActive(false); 
         if (winPanel != null) winPanel.SetActive(false);
+        if (FailPanel != null) FailPanel.SetActive(false);
+
         if (continueButton != null) continueButton.SetActive(false);
 
         // 2. DYNAMIC DIFFICULTY SCALE: Set up dishes, speeds, and the story end penalties
