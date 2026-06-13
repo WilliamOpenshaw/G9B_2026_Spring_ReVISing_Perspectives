@@ -68,8 +68,11 @@ public class LaundryBabyManager : MonoBehaviour
         if (losePanel != null) losePanel.SetActive(false);
         if (babyCryCueUI != null) babyCryCueUI.SetActive(false);
 
-        if (gameTimerText != null) gameTimerText.gameObject.SetActive(true);
-        if (laundryTimerFillCircle != null) laundryTimerFillCircle.gameObject.SetActive(true);
+        // Reactivate timer for new game
+        GameObject timer = GameObject.Find("timer");
+        GameObject timerCircle = GameObject.Find("TimerCircle");
+        if (timer != null) timer.SetActive(true);
+        if (timerCircle != null) timerCircle.SetActive(true);
 
         GoToLaundryRoom();
         ResetCryTimer();
@@ -146,6 +149,15 @@ public class LaundryBabyManager : MonoBehaviour
         
         if (balanceGameScript != null) balanceGameScript.ShowEmptyRoom();
         babyCryCueUI.SetActive(isCueActive); 
+
+        // Only show timer if game is still active
+        if (!isGameOver)
+        {
+            GameObject timer = GameObject.Find("timer");
+            GameObject timerCircle = GameObject.Find("TimerCircle");
+            if (timer != null) timer.SetActive(true);
+            if (timerCircle != null) timerCircle.SetActive(true);
+        }
 
         if (mazeScript != null) mazeScript.gameObject.SetActive(false);
     }
@@ -230,7 +242,13 @@ public class LaundryBabyManager : MonoBehaviour
         // Check if player won
         if (laundryItemsCompleted >= laundryItemsNeeded)
         {
-            winPanel.SetActive(true);
+            // Kill the timer immediately
+            GameObject timer = GameObject.Find("timer");
+            GameObject timerCircle = GameObject.Find("TimerCircle");
+            if (timer != null) timer.SetActive(false);
+            if (timerCircle != null) timerCircle.SetActive(false);
+
+            if (winPanel != null) winPanel.SetActive(true);
             playerWon = true;
             isGameOver = true;
             TriggerGameEnd();
@@ -256,31 +274,47 @@ public class LaundryBabyManager : MonoBehaviour
 
     void TriggerGameEnd()
     {
-        // 🔴 TURN THEM OFF FIRST - completely safe and unskippable!
-        if (gameTimerText != null) gameTimerText.gameObject.SetActive(false);
-        if (laundryTimerFillCircle != null) laundryTimerFillCircle.gameObject.SetActive(false);
+        // Find timer objects by name and deactivate them
+        GameObject timer = GameObject.Find("timer");
+        GameObject timerCircle = GameObject.Find("TimerCircle");
+        
+        if (timer != null) 
+        {
+            timer.SetActive(false);
+            Debug.Log("✓ Deactivated timer object");
+        }
+        
+        if (timerCircle != null)
+        {
+            timerCircle.SetActive(false);
+            Debug.Log("✓ Deactivated TimerCircle object");
+        }
 
+        // Set the state flag
         isGameOver = true;
-        Time.timeScale = 0f; // Freeze the engine
 
-        // Hide all room panels
-        laundryPanel.SetActive(false);
-        livingRoomPanel.SetActive(false);
-        livingRoomBackPanel.SetActive(false);
-        nurseryPanel.SetActive(false);
-        babyCryCueUI.SetActive(false);
+        // 2. Hide all the room panels
+        if (laundryPanel != null) laundryPanel.SetActive(false);
+        if (livingRoomPanel != null) livingRoomPanel.SetActive(false);
+        if (livingRoomBackPanel != null) livingRoomBackPanel.SetActive(false);
+        if (nurseryPanel != null) nurseryPanel.SetActive(false);
+        if (babyCryCueUI != null) babyCryCueUI.SetActive(false);
 
-        // Show appropriate end screen
+        // 3. Show appropriate end screen
         if (playerWon)
         {
-            winPanel.SetActive(true);
+            if (winPanel != null) winPanel.SetActive(true);
+            Debug.Log("PLAYER WON!");
         }
         else
         {
             if (losePanel != null) losePanel.SetActive(true);
+            Debug.LogError("PLAYER LOST!");
         }
-    }
 
+        // 4. FREEZE TIME LAST
+        Time.timeScale = 0f; 
+    }
     void ResetCryTimer()
     {
         cryEventTimer = Random.Range(minTimeBetweenCries, maxTimeBetweenCries);

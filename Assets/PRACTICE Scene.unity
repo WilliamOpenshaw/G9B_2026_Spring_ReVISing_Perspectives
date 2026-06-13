@@ -144,13 +144,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 33290661}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0.07869497, y: -0, z: -0, w: 0.9968988}
   m_LocalPosition: {x: -9.1, y: -260.7, z: 0}
   m_LocalScale: {x: 471.6584, y: 164.93806, z: 164.93806}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1038140450}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -9.027, y: 0, z: 0}
 --- !u!212 &33290663
 SpriteRenderer:
   serializedVersion: 2
@@ -3534,7 +3534,6 @@ Transform:
   m_Children:
   - {fileID: 1408764700}
   - {fileID: 1178325195}
-  - {fileID: 33290662}
   - {fileID: 1361050505}
   - {fileID: 82521219}
   - {fileID: 85021032}
@@ -3546,6 +3545,7 @@ Transform:
   - {fileID: 368009942}
   - {fileID: 145761492}
   - {fileID: 2030427444}
+  - {fileID: 33290662}
   m_Father: {fileID: 677224326}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1045328654
@@ -3755,8 +3755,8 @@ Transform:
   m_GameObject: {fileID: 1178325194}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 97.9436, y: -289.2123, z: 0}
-  m_LocalScale: {x: 9.315699, y: 18.268015, z: 23.100527}
+  m_LocalPosition: {x: 11, y: -267, z: 0}
+  m_LocalScale: {x: 28.447786, y: 25.211687, z: 31.881037}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1038140450}
@@ -3808,7 +3808,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 6
+  m_SortingOrder: 4
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: 96e3e14f1b0a99a45a5fbdfe3748a418, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -4614,13 +4614,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1408764699}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.9996914, y: -0.017196458, z: 0.006530191, w: -0.016693642}
-  m_LocalPosition: {x: 113, y: -271.1, z: -0.7}
-  m_LocalScale: {x: -10.814643, y: 10.833813, z: 10.649575}
+  m_LocalRotation: {x: -0.9845513, y: -0.10998592, z: -0.045452386, w: -0.12843694}
+  m_LocalPosition: {x: 23, y: -227, z: -44}
+  m_LocalScale: {x: -16.302668, y: 16.594841, z: 52.077423}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1038140450}
-  m_LocalEulerAnglesHint: {x: 181.9, y: -0.78100586, z: 1.9839935}
+  m_LocalEulerAnglesHint: {x: 165.942, y: -6.971985, z: 346.391}
 --- !u!212 &1408764701
 SpriteRenderer:
   serializedVersion: 2
@@ -4668,7 +4668,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 4
+  m_SortingOrder: 3
   m_MaskInteraction: 0
   m_Sprite: {fileID: -5362292703166988329, guid: ea41d827eabb09b45bc4a95ce0ad8664, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -4926,7 +4926,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Kajsa
+  m_text: Jamie
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
