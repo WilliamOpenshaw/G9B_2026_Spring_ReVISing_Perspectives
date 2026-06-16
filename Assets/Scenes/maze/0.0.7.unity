@@ -539,6 +539,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83eda1154a811b04c9657712e216e680, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::resetlistTimer
+  timer: {fileID: 0}
+  currentScreen: {fileID: 0}
+  winScreen: {fileID: 0}
+  loseScreen: {fileID: 0}
 --- !u!1 &14547941
 GameObject:
   m_ObjectHideFlags: 0
@@ -4483,7 +4487,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &442781263
 RectTransform:
   m_ObjectHideFlags: 0
@@ -13819,6 +13823,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83eda1154a811b04c9657712e216e680, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::resetlistTimer
+  timer: {fileID: 0}
+  currentScreen: {fileID: 0}
+  winScreen: {fileID: 0}
+  loseScreen: {fileID: 0}
 --- !u!1 &1503372840
 GameObject:
   m_ObjectHideFlags: 0

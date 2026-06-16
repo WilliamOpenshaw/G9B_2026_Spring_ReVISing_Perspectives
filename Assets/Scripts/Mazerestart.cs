@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class RestartMaze : MonoBehaviour
+public class Mazerestart : MonoBehaviour
 {
     public mazeGameManager gameManager;
     public mazeTimer2 timer;
